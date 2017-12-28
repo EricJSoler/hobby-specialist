@@ -17,7 +17,7 @@ export default class App extends React.Component {
                 <Left>
                     <Button transparent textStyle={{color: '#87838B'}} onPress={() => this.navigateSomewhere()}>
                     <Icon name="ios-more" />
-                    <Text>Tap to see it</Text>
+                    <Text>Tap to see me</Text>
                     </Button>
                 </Left>
             </CardItem>
