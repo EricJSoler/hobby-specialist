@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right} from "native-base";
+import database from '../config/database/firebase';
+import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button } from "native-base";
 
 export default class HomeScreen extends React.Component {
 
@@ -19,6 +20,11 @@ export default class HomeScreen extends React.Component {
       <Container>
         <Header>
           <Left>
+            <Button onPress={this.onSignOutPress.bind(this)}>
+              <Text>
+                Sign Out
+              </Text>
+            </Button>
           </Left>
           <Body>
             <Title>Hobby Specialist</Title>
@@ -41,6 +47,16 @@ export default class HomeScreen extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  onSignOutPress() {
+    database.auth().signOut()
+    .then(() => {
+        this.props.navigation.navigate('Auth');
+      })
+      .catch(() => {
+        this.props.navigation.navigate('Home');
+      });
   }
 
   renderAuthoringMode() {
