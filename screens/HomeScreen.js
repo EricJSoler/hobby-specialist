@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right} from "native-base";
+import PostSummaryContent from '../Components/PostSummaryContent'
 
 export default class HomeScreen extends React.Component {
 
@@ -31,13 +32,7 @@ export default class HomeScreen extends React.Component {
           {this.renderListOfPostSummaries()}
         </Content>
         <Footer>
-          <Left>
-          </Left>
-          <Body>
-            <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-          </Body>
-          <Right>
-          </Right>
+          <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
         </Footer>
       </Container>
     );
@@ -103,23 +98,7 @@ export default class HomeScreen extends React.Component {
   renderPostSummary(postSummary, index) {
     return (
       (
-        <Card key={index} style={{flex: 1}} >
-        <CardItem button onPress={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)}>
-          <Left>
-            <Thumbnail source={{uri: postSummary.postSummaryContent.image}} />  
-            <Body>  
-              <Text>{postSummary.postSummaryContent.title}</Text>
-            </Body>
-          </Left>
-        </CardItem>
-        <CardItem button onPress={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)}>
-          <Body>
-            <Text>
-            {postSummary.postSummaryContent.text}
-            </Text>
-          </Body>
-        </CardItem>
-      </Card>  
+        <PostSummaryContent key={index} postSummaryContent={postSummary.postSummaryContent} onPressCallback={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)} />
       )
     );
   }

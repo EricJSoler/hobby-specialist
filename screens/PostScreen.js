@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon} from "native-base";
+import Section from '../Components/Section'
 
 export default class PostScreen extends React.Component {
 
@@ -37,13 +38,7 @@ export default class PostScreen extends React.Component {
           {this.renderListOfSections(this.state.postLookupId)}
         </Content>
         <Footer>
-          <Left>
-          </Left>
-          <Body>
-            <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-          </Body>
-          <Right>
-          </Right>
+          <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
         </Footer>
       </Container>
     );
@@ -81,7 +76,7 @@ export default class PostScreen extends React.Component {
     }, this);
   }
 
-  getContent(contentLookupId) {
+  getSectionContent(contentLookupId) {
     return {
         contentLookupId: 'text5',
         type: 'ImageAndTextNoVideo',
@@ -91,50 +86,13 @@ export default class PostScreen extends React.Component {
   }
 
   renderSection(section, index) {
+    sectionContent = this.getSectionContent(section.sectionLookupId);
+
     return (
         (
-            <Card key={index} style={{flex: 1}} >
-                <CardItem>
-                    <Body>  
-                        <Text>{section.header}</Text>
-                    </Body>
-                </CardItem>
-                {this.renderContent(this.getContent(section.contentLookupId))}
-                <CardItem>
-                    <Body>
-                        <Text>
-                            {section.footer}
-                        </Text>
-                    </Body>
-                </CardItem>
-            </Card> 
+          <Section key={index} section={section} sectionContent={sectionContent} />
         )
     );
-  }
-
-  renderContent(content) {
-    switch(content.type) {
-        case 'ImageAndTextNoVideo':
-            return (
-                (
-                <CardItem>
-                    <Body>
-                        <View style={{flex: 1, width: 200, height: 200, margin: 5}}>         
-                            <Image 
-                            style={{flex:1, height: undefined, width: undefined, resizeMode: 'contain'}}
-                            source={{uri: content.image}}
-                            />
-                        </View>
-                        <Text>
-                            {content.text}
-                        </Text>
-                    </Body>
-                </CardItem>
-                )
-            );
-        default:
-            return;
-    }
   }
 
   renderPostSummary(postSummary, index) {
