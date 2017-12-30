@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label} from "native-base";
+import * as ContentConstants from '../config/constants/Content';
 
 export default class SectionEditorScreen extends React.Component {
 
     constructor(props)
     {
         super(props);
+        
         this.state = {
           addSectionCallback: this.props.navigation.state.params.addSectionCallback,
           headerText: '',
@@ -14,6 +16,46 @@ export default class SectionEditorScreen extends React.Component {
           imageUrl: '',
           bodyText: ''
         };
+    }
+
+    // componentDidMount() is invoked immediately after a component is mounted. Initialization that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
+    componentDidMount()
+    {
+      this.tryConfigureForEditingExistingSection();
+    }
+
+    // Will check appropriate params specified through navigator and overwrite existing state to match
+    // if we are editing an existing section
+    tryConfigureForEditingExistingSection()
+    {
+
+      if (this.props.navigation.state.params.existingSection && !this.props.navigation.state.params.existingContent)
+      {
+        console.warn('an existing section is being editing but has no existing content');
+      }
+
+      if (this.props.navigation.state.params.existingSection)
+      {
+        this.setState(previousState => {
+          return { 
+            headerText:  this.props.navigation.state.params.existingSection.header,
+            footerText: this.props.navigation.state.params.existingSection.footer
+          };
+        });
+      }
+
+      if (this.props.navigation.state.params.existingContent)
+      {
+        switch (this.props.navigation.state.params.existingContent.type)
+        {
+          case ContentConstants.IMAGE_AND_TEXT: this.setState(previousState => {
+            return { 
+              imageUrl:  this.props.navigation.state.params.existingContent.image,
+              bodyText: this.props.navigation.state.params.existingContent.text
+            };
+          });
+        }
+      }
     }
 
   render() {
@@ -102,7 +144,7 @@ export default class SectionEditorScreen extends React.Component {
 
   renderContent(content) {
     switch(content.type) {
-        case 'ImageAndTextNoVideo':
+        case ContentConstants.IMAGE_AND_TEXT:
             return (
                 (
                 <CardItem>
