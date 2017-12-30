@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label} from "native-base";
+import SectionSummaryPreviewEdit  from '../Components/SectionSummaryPreviewEdit';
 
 export default class PostEditorScreen extends React.Component {
 
@@ -20,15 +21,22 @@ export default class PostEditorScreen extends React.Component {
         this.props.navigation.navigate("SectionEditor", {addSectionCallback: this.addSectionCallback.bind(this)});
     }
 
-    addSectionCallback(section, content) {
-        tempSections = this.state.complexSections;
-        tempSections.push({
-            section: section,
-            content: content}
-        );
-        this.setState(previousState => {
-            return { complexSections: tempSections };
-          });
+    addSectionCallback(section, content, modifiedIndex) {
+        if(modifiedIndex)
+        {
+
+        }
+        else
+        {        
+            tempSections = this.state.complexSections;
+            tempSections.push({
+                section: section,
+                content: content}
+            );
+            this.setState(previousState => {
+                return { complexSections: tempSections };
+            });
+        }
     }
 
   render() {
@@ -84,26 +92,32 @@ export default class PostEditorScreen extends React.Component {
     );
   }
 
-  renderSection(section, index) {
-    return (
-        (
-            <Card key={index} style={{flex: 1}} >
-                <CardItem>
-                    <Body>  
-                        <Text>{section.header}</Text>
-                    </Body>
-                </CardItem>
-            </Card> 
-        )
-    );
-  }
   renderSectionsPreview()
   {
     return this.state.complexSections.map((complexSection, index) => {
-        return this.renderSection(complexSection.section, index);
-    }, this);
+        return (
+            (
+                <SectionSummaryPreviewEdit key={index} content={complexSection.content} section={complexSection.section} editExistingSectionCallback={this.editExistingSectionCallback.bind(this)}/>
+            )
+        );
+    });
   }
-}
+
+  editExistingSectionCallback(section, content)
+  {
+    if(!section)
+    {
+        console.log( 'section passed to edit existing section callback should not be undefined');
+    }
+
+    if(!content)
+    {
+        console.log( 'content passed to edit existing section callback should not be undefined');
+    }
+
+    this.props.navigation.navigate("SectionEditor", {addSectionCallback: this.addSectionCallback.bind(this), existingSection: section, existingContent: content});
+  }
+} 
 
 const styles = StyleSheet.create({
     container: {
