@@ -9,7 +9,6 @@ MainPage: {
 PostSummary: {
 	PostSummaryContent: PostSummaryContentLookupId
 	postSummaryLookupId: uuid
-	postLookupId: uuid
 }
 
 PostSummaryContent: {
@@ -24,6 +23,7 @@ PostSummaryContent: {
 Post: {
 	postLookupId: uuid
 	sectionLookupIdList: List<SectionLookupId> //list of uuid strings, maintains ordering
+	postSummaryLookupId: uuid
 }
 
 //pull this on post load stage 2 (rendering)
