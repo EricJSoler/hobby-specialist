@@ -24,6 +24,7 @@ Post: {
 	postLookupId: uuid
 	sectionLookupIdList: List<SectionLookupId> //list of uuid strings, maintains ordering
 	postSummaryLookupId: uuid
+	authorLookupId: uuid
 }
 
 //pull this on post load stage 2 (rendering)
