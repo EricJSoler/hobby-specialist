@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import database from '../config/database/firebase';
-import { FormLabel, FormInput } from 'react-native-elements';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label } from "native-base";
 
 export default class AuthScreen extends React.Component {
