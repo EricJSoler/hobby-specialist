@@ -4,8 +4,8 @@ import AuthScreen from '../screens/AuthScreen';
 import HomeScreen from '../screens/HomeScreen';
 import PostScreen from '../screens/PostScreen';
 import AuthoringScreen from '../screens/AuthoringScreen';
-import PostEditorScreen from '../screens/PostEditorScreen';
-import SectionEditorScreen from '../screens/SectionEditorScreen';
+import PostEditorScreen from '../screens/editors/PostEditorScreen';
+import SectionEditorScreen from '../screens/editors/SectionEditorScreen';
 
 const RootNavigator = StackNavigator(
     {
