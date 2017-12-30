@@ -16,27 +16,47 @@ export default class PostEditorScreen extends React.Component {
         }
     }
 
-    navigateToSectionEditor()
+    navigateToSectionEditor(complexSection)
     {
-        this.props.navigation.navigate("SectionEditor", {addSectionCallback: this.addSectionCallback.bind(this)});
+        if (!complexSection)
+        {
+            complexSection = this.createEmptyComplexSection();
+        }
+
+        this.props.navigation.navigate("SectionEditor", {complexSection: complexSection, updateComplexSectionCallback: this.updateComplexSectionCallback.bind(this)});
     }
 
-    addSectionCallback(section, content, modifiedIndex) {
-        if(modifiedIndex)
-        {
+    createEmptyComplexSection()
+    {
+        return {
+            section: {
+                
+            },
+            content: {
+                
+            }
+            ,
+            index : -1
+        }
+    }
 
+    updateComplexSectionCallback(complexSection)
+    {
+        tempSections = this.state.complexSections;
+
+        if(complexSection.index === -1)
+        {
+            complexSection.index = tempSections.length;
+            tempSections.push(complexSection);
         }
         else
-        {        
-            tempSections = this.state.complexSections;
-            tempSections.push({
-                section: section,
-                content: content}
-            );
-            this.setState(previousState => {
-                return { complexSections: tempSections };
-            });
+        {
+            tempSections[complexSection.index] = complexSection;
         }
+
+        this.setState(previousState => {
+            return { complexSections: tempSections };
+        });
     }
 
   render() {
@@ -80,13 +100,7 @@ export default class PostEditorScreen extends React.Component {
             </Button>
         </Content>
         <Footer>
-          <Left>
-          </Left>
-          <Body>
             <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-          </Body>
-          <Right>
-          </Right>
         </Footer>
       </Container>
     );
@@ -97,26 +111,32 @@ export default class PostEditorScreen extends React.Component {
     return this.state.complexSections.map((complexSection, index) => {
         return (
             (
-                <SectionSummaryPreviewEdit key={index} content={complexSection.content} section={complexSection.section} editExistingSectionCallback={this.editExistingSectionCallback.bind(this)}/>
+                <SectionSummaryPreviewEdit key={index} content={complexSection.content} section={complexSection.section} editExistingSectionCallback={() => this.editExistingSectionCallback(complexSection)}/>
             )
         );
     });
   }
 
-  editExistingSectionCallback(section, content)
+  editExistingSectionCallback(complexSection)
   {
-    if(!section)
+    if(!complexSection)
     {
-        console.log( 'section passed to edit existing section callback should not be undefined');
+        console.error('complex section null');
     }
 
-    if(!content)
+    if(!complexSection.section)
     {
-        console.log( 'content passed to edit existing section callback should not be undefined');
+        console.warn( 'section passed to edit existing section callback should not be undefined');
     }
 
-    this.props.navigation.navigate("SectionEditor", {addSectionCallback: this.addSectionCallback.bind(this), existingSection: section, existingContent: content});
+    if(!complexSection.content)
+    {
+        console.warn( 'content passed to edit existing section callback should not be undefined');
+    }
+
+    this.navigateToSectionEditor(complexSection); // this.props.navigation.navigate("SectionEditor", {saveSectionCallback: this.sectionUpdation.bind(this, complexSection), existingSection: section, existingContent: content});
   }
+
 } 
 
 const styles = StyleSheet.create({

@@ -16,7 +16,7 @@ import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, B
 //	contentLookupId: uuid
 //	type: StringNamedType //x number of properties dependent upon hardcoded named type
 //  }
-//  editCallback: a callback function that will be invoked passing the section object and content object as a parameter
+//  editCallback: a callback function that will be invoked when the edit button is pressed
 export default class SectionSummaryPreviewEdit extends React.Component {
     
     constructor(props)
@@ -48,7 +48,7 @@ export default class SectionSummaryPreviewEdit extends React.Component {
                 </Body>
                 <Footer>
                     <Right>
-                        <Button onPress={() => this.props.editExistingSectionCallback(this.props.section, this.props.content)}>
+                        <Button onPress={this.props.editExistingSectionCallback}>
                             <Text>
                                 Edit Section
                             </Text> 

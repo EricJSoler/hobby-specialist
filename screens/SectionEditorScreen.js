@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label} from "native-base";
-import * as ContentConstants from '../config/constants/Content';
+import * as SectionContentConstants from '../config/constants/SectionContentConstants';
 
 export default class SectionEditorScreen extends React.Component {
 
@@ -10,48 +10,43 @@ export default class SectionEditorScreen extends React.Component {
         super(props);
         
         this.state = {
-          addSectionCallback: this.props.navigation.state.params.addSectionCallback,
           headerText: '',
           footerText: '',
           imageUrl: '',
-          bodyText: ''
+          bodyText: '',
+          modifyingExisting: this.props.navigation.state.params.modifyingExisting
         };
     }
 
     // componentDidMount() is invoked immediately after a component is mounted. Initialization that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-    componentDidMount()
-    {
-      this.tryConfigureForEditingExistingSection();
-    }
+     componentDidMount()
+     {
+        this.tryConfigureForEditingExistingSection();
+     }
 
     // Will check appropriate params specified through navigator and overwrite existing state to match
     // if we are editing an existing section
     tryConfigureForEditingExistingSection()
     {
-
-      if (this.props.navigation.state.params.existingSection && !this.props.navigation.state.params.existingContent)
+      if(this.props.navigation.state.params.complexSection.index === -1)
       {
-        console.warn('an existing section is being editing but has no existing content');
+        return;
       }
-
-      if (this.props.navigation.state.params.existingSection)
+      else
       {
         this.setState(previousState => {
           return { 
-            headerText:  this.props.navigation.state.params.existingSection.header,
-            footerText: this.props.navigation.state.params.existingSection.footer
+            headerText:  this.props.navigation.state.params.complexSection.section.header,
+            footerText: this.props.navigation.state.params.complexSection.section.footer
           };
         });
-      }
 
-      if (this.props.navigation.state.params.existingContent)
-      {
-        switch (this.props.navigation.state.params.existingContent.type)
+        switch (this.props.navigation.state.params.complexSection.content.type)
         {
-          case ContentConstants.IMAGE_AND_TEXT: this.setState(previousState => {
+          case SectionContentConstants.IMAGE_AND_TEXT: this.setState(previousState => {
             return { 
-              imageUrl:  this.props.navigation.state.params.existingContent.image,
-              bodyText: this.props.navigation.state.params.existingContent.text
+              imageUrl: this.props.navigation.state.params.complexSection.content.image,
+              bodyText: this.props.navigation.state.params.complexSection.content.text
             };
           });
         }
@@ -96,82 +91,22 @@ export default class SectionEditorScreen extends React.Component {
                         value={this.state.footerText}/>
             </Item>
           </Form>
-          <Button onPress={() => this.doneAddingSectionClick()}>
+          <Button onPress={() => this.saveSection()}>
             <Text>Done adding section</Text>
           </Button>
-          {this.tryPreview()}
         </Content>
         <Footer>
-          <Left>
-          </Left>
-          <Body>
             <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-          </Body>
-          <Right>
-          </Right>
         </Footer>
       </Container>
     );
   }
 
-  // TODO: add child component
-  tryPreview()
+  saveSection()
   {
-    return this.renderSectionAndContentTrash(this.createSectionJSON('doesntmatter'), 0, this.createSectionContentJSON());  
-  }
-
-  renderSectionAndContentTrash(section, index, content) {
-    return (
-        (
-            <Card key={index} style={{flex: 1}} >
-                <CardItem>
-                    <Body>  
-                        <Text>{section.header}</Text>
-                    </Body>
-                </CardItem>
-                {this.renderContent(content)}
-                <CardItem>
-                    <Body>
-                        <Text>
-                            {section.footer}
-                        </Text>
-                    </Body>
-                </CardItem>
-            </Card> 
-        )
-    );
-  }
-
-  renderContent(content) {
-    switch(content.type) {
-        case ContentConstants.IMAGE_AND_TEXT:
-            return (
-                (
-                <CardItem>
-                    <Body>
-                        <View style={{flex: 1, width: 200, height: 200, margin: 5}}>         
-                            <Image 
-                            style={{flex:1, height: undefined, width: undefined, resizeMode: 'contain'}}
-                            source={{uri: content.image}}
-                            />
-                        </View>
-                        <Text>
-                            {content.text}
-                        </Text>
-                    </Body>
-                </CardItem>
-                )
-            );
-        default:
-            return;
-    }
-  }
-
-
-  doneAddingSectionClick()
-  {
-    var content = this.createSectionContentJSON(); 
-    this.state.addSectionCallback(this.createSectionJSON(content.contentLookupId), content);
+    this.props.navigation.state.params.complexSection.content = this.createSectionContentJSON();
+    this.props.navigation.state.params.complexSection.section= this.createSectionJSON(this.props.navigation.state.params.complexSection.content.contentLookupId);
+    this.props.navigation.state.params.updateComplexSectionCallback(this.props.navigation.state.params.complexSection);
     this.props.navigation.goBack();
   }
 

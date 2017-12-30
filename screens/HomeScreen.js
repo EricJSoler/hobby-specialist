@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import PostSummaryContent from '../Components/PostSummaryContent'
 import { signOut } from '../utils/auth';
 import { getPostSummaries, getPostSummaryContent } from '../utils/read';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button } from "native-base";
@@ -149,23 +150,7 @@ export default class HomeScreen extends React.Component {
   renderPostSummary(postSummary, index) {
     return (
       (
-        <Card key={index} style={{flex: 1}} >
-        <CardItem button onPress={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)}>
-          <Left>
-            <Thumbnail source={{uri: postSummary.image}} />  
-            <Body>  
-              <Text>{postSummary.title}</Text>
-            </Body>
-          </Left>
-        </CardItem>
-        <CardItem button onPress={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)}>
-          <Body>
-            <Text>
-            {postSummary.text}
-            </Text>
-          </Body>
-        </CardItem>
-      </Card>  
+        <PostSummaryContent key={index} postSummaryContent={postSummary} onPressCallback={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)} />
       )
     );
   }

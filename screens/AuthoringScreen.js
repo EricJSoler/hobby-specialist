@@ -32,13 +32,7 @@ export default class AuthoringScreen extends React.Component {
             </Button>
         </Content>
         <Footer>
-          <Left>
-          </Left>
-          <Body>
-            <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-          </Body>
-          <Right>
-          </Right>
+          <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
         </Footer>
       </Container>
     );
