@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right} from "native-base";
 import PostSummaryContent from '../Components/PostSummaryContent'
+import { signOut } from '../utils/auth';
+import { getPostSummaries, getPostSummaryContent } from '../utils/read';
+import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button } from "native-base";
 
 export default class HomeScreen extends React.Component {
 
@@ -15,27 +17,110 @@ export default class HomeScreen extends React.Component {
     this.props.navigation.navigate("Authoring");
   }
 
+  constructor() {
+    super();
+    this.state = {
+      ready: false,
+      postSummaryContents: []
+    }
+  }
+
+  componentWillMount() {
+    var postSummaryContents = [];
+    getPostSummaries().then((postSummaries) => {
+      var promises = [];
+      postSummaries.forEach((postSummary) => {
+        promises.push(getPostSummaryContent(postSummary.val().postSummaryContentLookupId));
+      });
+      Promise.all(promises).then((values) => {
+        values.forEach((value) => {
+          postSummaryContents.push(value.val());
+        });
+        this.setState(previousState => {
+          return { ready: true, postSummaryContents: postSummaryContents };
+        });
+      });
+    });
+  }
+
   render() {
-    return (
-      <Container>
-        <Header>
-          <Left>
-          </Left>
-          <Body>
-            <Title>Hobby Specialist</Title>
-          </Body>
-          <Right>
-          </Right>
-        </Header>
-        <Content padder>
-          {this.renderAuthoringMode()}
-          {this.renderListOfPostSummaries()}
-        </Content>
-        <Footer>
-          <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-        </Footer>
-      </Container>
-    );
+    if (!this.state.ready) {
+      return (
+        <Container>
+          <Header>
+            <Left>
+              <Button onPress={this.onSignOutPress.bind(this)}>
+                <Text>
+                  Sign Out
+                </Text>
+              </Button>
+            </Left>
+            <Body>
+              <Title>Hobby Specialist</Title>
+            </Body>
+            <Right>
+            </Right>
+          </Header>
+          <Content padder>
+            <Text>
+              Loading
+            </Text>
+          </Content>
+          <Footer>
+            <Left>
+            </Left>
+            <Body>
+              <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
+            </Body>
+            <Right>
+            </Right>
+          </Footer>
+        </Container>
+      );
+    }
+    else {
+      return (
+        <Container>
+          <Header>
+            <Left>
+              <Button onPress={this.onSignOutPress.bind(this)}>
+                <Text>
+                  Sign Out
+                </Text>
+              </Button>
+            </Left>
+            <Body>
+              <Title>Hobby Specialist</Title>
+            </Body>
+            <Right>
+            </Right>
+          </Header>
+          <Content padder>
+            {this.renderAuthoringMode()}
+            {this.renderListOfPostSummaries(this.state.postSummaryContents)}
+          </Content>
+          <Footer>
+            <Left>
+            </Left>
+            <Body>
+              <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
+            </Body>
+            <Right>
+            </Right>
+          </Footer>
+        </Container>
+      );
+    }
+  }
+
+  onSignOutPress() {
+    signOut()
+      .then(() => {
+          this.props.navigation.navigate('Auth');
+      })
+      .catch(() => {
+          this.props.navigation.navigate('Home');
+      });
   }
 
   renderAuthoringMode() {
@@ -54,43 +139,10 @@ export default class HomeScreen extends React.Component {
     );
   }
 
-  // returns list of json for the post summaries
-  getListOfPostSummaries() {
-    return [
-      {
-        postSummaryContent: {
-          title: 'eric',
-          image: 'https://assets-cdn.github.com/images/modules/open_graph/github-mark.png',
-          text: 'sucks'
-        },
-	      postSummaryLookupId: 'text',
-	      postLookupId: 'text2'
-      },
-      {
-        postSummaryContent: {
-          title: 'eric',
-          image: 'https://assets-cdn.github.com/images/modules/open_graph/github-mark.png',
-          text: 'sucks'
-        },
-	      postSummaryLookupId: 'text',
-	      postLookupId: 'text2'
-      },
-      {
-        postSummaryContent: {
-          title: 'eric',
-          image: 'https://assets-cdn.github.com/images/modules/open_graph/github-mark.png',
-          text: 'sucks'
-        },
-	      postSummaryLookupId: 'text',
-	      postLookupId: 'text2'
-      }
-    ];
-  }
-
   // invokes getListOfPostSummaries to get the json
   // and constructs/returns the post summary components
-  renderListOfPostSummaries() {
-    return this.getListOfPostSummaries().map((postSummary, index) => {
+  renderListOfPostSummaries(listOfPostSummaryContents) {
+    return listOfPostSummaryContents.map((postSummary, index) => {
       return this.renderPostSummary(postSummary, index);
     }, this);
   }
@@ -98,7 +150,7 @@ export default class HomeScreen extends React.Component {
   renderPostSummary(postSummary, index) {
     return (
       (
-        <PostSummaryContent key={index} postSummaryContent={postSummary.postSummaryContent} onPressCallback={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)} />
+        <PostSummaryContent key={index} postSummaryContent={postSummary} onPressCallback={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)} />
       )
     );
   }

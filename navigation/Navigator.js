@@ -1,5 +1,6 @@
 import React from 'react'
 import { StackNavigator } from 'react-navigation';
+import AuthScreen from '../screens/AuthScreen';
 import HomeScreen from '../screens/HomeScreen';
 import PostScreen from '../screens/PostScreen';
 import AuthoringScreen from '../screens/AuthoringScreen';
@@ -8,6 +9,9 @@ import SectionEditorScreen from '../screens/SectionEditorScreen';
 
 const RootNavigator = StackNavigator(
     {
+      Auth: {
+        screen: AuthScreen
+      },
       Home: {
         screen: HomeScreen,
       },
