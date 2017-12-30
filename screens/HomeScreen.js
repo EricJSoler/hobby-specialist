@@ -61,6 +61,9 @@ export default class HomeScreen extends React.Component {
             </Right>
           </Header>
           <Content padder>
+            <Text>
+              Loading
+            </Text>
           </Content>
           <Footer>
             <Left>
