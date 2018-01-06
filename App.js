@@ -1,26 +1,38 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Navigator from './navigation/Navigator'
-import { writePostSummaryContent, writePostSummary } from './utils/write';
-import { getPosts, getPostSummaryContent, getPostSummaries } from './utils/read';
+import { writePostSummary, writePost, writeSection } from './utils/write';
 import uuid from 'uuid/v4';
 
 export default class App extends React.Component {
   constructor() {
     super();
-    var postSummaryContentLookupUUID = uuid();
-    var postSummaryContent = {
-      title: 'hello',
-      image: 'https://assets-cdn.github.com/images/modules/open_graph/github-mark.png',
-      text: 'eric sucks',
-      type: 'ImageAndTextNoVideo'
+    var m = uuid();
+    var section = {
+      sectionLookupId: m,
+      header: 'poop', // V2 may get componatized
+      footer: 'beans', // V2 may get componatized
+        content: {
+          image: 'https://assets-cdn.github.com/images/modules/open_graph/github-mark.png',
+          text: 'eric sucks',
+          type: 'ImageAndTextNoVideo' //x number of properties dependent upon hardcoded named type	
+        }
+      };
+    var t = uuid();
+    var post = {
+      postLookupId: t,
+      sectionLookupIdList: [m], //list of uuid strings, maintains ordering
+      postSummary: {
+        title: 'goodbye',
+        content: {
+          image: 'https://assets-cdn.github.com/images/modules/open_graph/github-mark.png',
+          text: 'eric sucks',
+        }
+      },
+      authorLookupId: 'poop'
     }
-    writePostSummaryContent(postSummaryContent, postSummaryContentLookupUUID);
-    var postSummaryLookupUUID = uuid();
-    var postSummary = {
-      postSummaryContentLookupId: postSummaryContentLookupUUID
-    }
-    writePostSummary(postSummary, postSummaryLookupUUID);
+    writePost(post, t);
+    writeSection(section, m);
   }
 
   render() {

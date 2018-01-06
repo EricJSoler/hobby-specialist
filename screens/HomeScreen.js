@@ -2,14 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PostSummary from '../Components/PostSummary'
 import { signOut } from '../utils/auth';
-import { getPostSummaries, getPostSummaryContent } from '../utils/read';
+import { getAllPosts } from '../utils/pull';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button } from "native-base";
 
 export default class HomeScreen extends React.Component {
 
-  navigateToPostScreen(postLookupId, postSummary)
+  navigateToPostScreen(post)
   {
-    this.props.navigation.navigate("Post", {postLookupId: postLookupId, postSummaryContent: postSummary});
+    this.props.navigation.navigate("Post", {post: post});
   }
 
   navigateToAuthoringScreen()
@@ -21,26 +21,16 @@ export default class HomeScreen extends React.Component {
     super();
     this.state = {
       ready: false,
-      postSummaryContents: []
+      posts: []
     }
   }
 
   componentWillMount() {
-    var postSummaryContents = [];
-    getPostSummaries().then((postSummaries) => {
-      var promises = [];
-      postSummaries.forEach((postSummary) => {
-        promises.push(getPostSummaryContent(postSummary.val().postSummaryContentLookupId));
-      });
-      Promise.all(promises).then((values) => {
-        values.forEach((value) => {
-          postSummaryContents.push(value.val());
-        });
+      getAllPosts().then(function(posts) {
         this.setState(previousState => {
-          return { ready: true, postSummaryContents: postSummaryContents };
+          return { ready: true, posts: posts };
         });
-      });
-    });
+      }.bind(this));
   }
 
   render() {
@@ -56,7 +46,7 @@ export default class HomeScreen extends React.Component {
               </Button>
             </Left>
             <Body>
-              <Title>Home Llama</Title>
+              <Title>Home</Title>
             </Body>
             <Right>
             </Right>
@@ -67,13 +57,7 @@ export default class HomeScreen extends React.Component {
             </Text>
           </Content>
           <Footer>
-            <Left>
-            </Left>
-            <Body>
-              <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-            </Body>
-            <Right>
-            </Right>
+            <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
           </Footer>
         </Container>
       );
@@ -90,23 +74,17 @@ export default class HomeScreen extends React.Component {
               </Button>
             </Left>
             <Body>
-              <Title>Home Llama</Title>
+              <Title>Home</Title>
             </Body>
             <Right>
             </Right>
           </Header>
           <Content padder>
             {this.renderAuthoringMode()}
-            {this.renderListOfPostSummaries(this.state.postSummaryContents)}
+            {this.renderListOfPosts(this.state.posts)}
           </Content>
           <Footer>
-            <Left>
-            </Left>
-            <Body>
-              <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
-            </Body>
-            <Right>
-            </Right>
+            <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
           </Footer>
         </Container>
       );
@@ -141,11 +119,11 @@ export default class HomeScreen extends React.Component {
 
   // invokes getListOfPostSummaries to get the json
   // and constructs/returns the post summary components
-  renderListOfPostSummaries(listOfPostSummaryContents) { //TODO: this list of post summaries is using incorrect object schema
-    return listOfPostSummaryContents.map((postSummary, index) => {
+  renderListOfPosts(listOfPosts) { //TODO: this list of post summaries is using incorrect object schema
+    return listOfPosts.map((post, index) => {
       return (
         (
-          <PostSummary key={index} postSummary={postSummary} onPressCallback={() => this.navigateToPostScreen(postSummary.postLookupId, postSummary)} />
+          <PostSummary key={index} postSummary={post.postSummary} onPressCallback={() => this.navigateToPostScreen(post)} />
         )
       );
     }, this);

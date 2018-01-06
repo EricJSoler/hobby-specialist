@@ -39,6 +39,7 @@ export default class AuthScreen extends React.Component {
       );
   }
 
+  // TODO -- move to auth.js
   onLoginPress() {
       this.setState({error: '', loading: true});
       const { email, password } = this.state;

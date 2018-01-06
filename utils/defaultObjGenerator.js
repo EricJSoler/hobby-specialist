@@ -5,13 +5,22 @@ import * as SectionContentConstants from '../config/constants/SectionContentCons
 export function generateDefaultPostSummary()
 {
     return {
-        postSummaryLookupId: PostSummaryConstants.DEFAULT_LOOKUP_ID,
         title: PostSummaryConstants.DEFAULT_TITLE,
         content: {
             image: PostSummaryConstants.DEFAULT_IMAGE,
             text: PostSummaryConstants.DEFAULT_TEXT
         }
     }
+}
+
+export function generateDefaultPost()
+{
+    return {
+        postLookupId: 'DEFAULT', // TODO
+        authorLookupId: 'DEFAULT',
+        sectionLookupIdList: ['DEFAULT'],
+        postSummary: generateDefaultPostSummary()
+    };
 }
 
 export function generateDefaultSection()

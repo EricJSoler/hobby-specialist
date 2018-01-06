@@ -12,16 +12,8 @@ export function getPosts() {
     return getAllFromDB('post');
 }
 
-export function getPostSummaries() {
-    return getAllFromDB('postSummary');
-}
-
-export function getPostSummaryContents() {
-    return getAllFromDB('postSummaryContent');
-}
-
-export function getPostSummaryContent(lookupId) {
-    return getFromDB('postSummaryContent', lookupId);
+export function getSectionById(lookupId) {
+    return getFromDB('section', lookupId);
 }
 
 

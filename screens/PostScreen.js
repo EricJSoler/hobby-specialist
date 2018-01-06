@@ -3,51 +3,95 @@ import { Text } from 'react-native';
 import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, Icon } from "native-base";
 import Section from '../Components/Section'
 import PostSummary from '../Components/PostSummary'
-import { generateDefaultPostSummary, generateDefaultSection } from '../utils/defaultObjGenerator';
+import { getPost, getSectionById } from '../utils/read';
+import { generateDefaultPost, generateDefaultPostSummary, generateDefaultSection } from '../utils/defaultObjGenerator';
 
 const CLAZZ_NAME = '[PostScreen]';
-
-  // Database
-function getPost(postLookupId) {
-    return {
-      postLookupId: 'text2',
-      sectionLookupIdList: ['text1', 'text2', 'text3', 'text4']
-    }
-}
-
-function getSection(sectionLookupId) {
-    return generateDefaultSection();
-}
 
 
 export default class PostScreen extends React.Component {
 
   constructor(props) {
     super(props);
-
-    stateToValidate = {
-      postLookupId: this.props.navigation.state.params.postLookupId,
-      postSummary: this.props.navigation.state.params.postSummary
-    };
-
-    var defaultObjectsUsed = [];
-
-    if(!stateToValidate.postSummary)
-    {
-      console.log(CLAZZ_NAME, 'Unspecified navigation.state.paramspostSummary ');
-      stateToValidate.postSummary = generateDefaultPostSummary();
-      defaultObjectsUsed.push({ key: 'stateToValidate.postSummary', value: stateToValidate.postSummary});
+    this.state = {
+      ready: false,
+      post: this.props.navigation.state.params.post,
+      sections: []
     }
+  }
 
+  componentWillMount() {
+    this.setDefaults();
+    var sections = [];
+    var promises = [];
+
+    this.state.post.sectionLookupIdList.forEach(function(sectionId) {
+      promises.push(getSectionById(sectionId));
+    });
+
+    Promise.all(promises).then((values) => {
+      values.forEach((value) => {
+        sections.push(value.val());
+      });
+      this.setState(previousState => {
+        return { ready: true, sections: sections }
+      });
+    });
+  }
+
+  setDefaults() {
+    stateToValidate = {
+      post: this.state.post
+    };
+    var defaultObjectsUsed = [];
+    if(!stateToValidate.post)
+    {
+      console.log(CLAZZ_NAME, 'Unspecified navigation.state.params.post');
+      stateToValidate.post = generateDefaultPost();
+      defaultObjectsUsed.push({ key: 'stateToValidate.post', value: stateToValidate.post});
+    }
+    if (!stateToValidate.post.postSummary) {
+      console.log(CLAZZ_NAME, 'Unspecified navigation.state.params.post.postSummary');
+      stateToValidate.post.postSummary = generateDefaultPostSummary();
+      defaultObjectsUsed.push({ key: 'stateToValidate.post.postSummary', value: stateToValidate.post.postSummary});
+    }
     if(defaultObjectsUsed.length > 0)
     {
       console.warn(CLAZZ_NAME, 'Default objects used ', defaultObjectsUsed);
     }
-
-    this.state = stateToValidate;
+    this.setState(previousState => {
+      return stateToValidate;
+    });
   }
 
   render() {
+    if (!this.state.ready) {
+      return (
+        <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={() => this.navigateBack()}>
+                  <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title>PostScreen</Title>
+            </Body>
+            <Right>
+            </Right>
+          </Header>
+          <Content padder>
+            <PostSummary postSummary={this.state.post.postSummary} />
+            <Text>
+              Loading
+            </Text>
+          </Content>
+          <Footer>
+            <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
+          </Footer>
+        </Container>
+      );
+    }
     return (
       <Container>
         <Header>
@@ -63,8 +107,8 @@ export default class PostScreen extends React.Component {
           </Right>
         </Header>
         <Content padder>
-          <PostSummary postSummary={this.state.postSummary} />
-          {this.renderListOfSections(this.state.postLookupId)}
+          <PostSummary postSummary={this.state.post.postSummary} />
+          {this.renderListOfSections(this.state.sections)}
         </Content>
         <Footer>
           <Text>Created by Eric J. Soler and Christopher A. DuBois</Text>
@@ -73,24 +117,14 @@ export default class PostScreen extends React.Component {
     );
   }
 
-  renderListOfSections() {
-    return this.getListOfSections().map((section, index) => {
+  renderListOfSections(sections) {
+    return sections.map((section, index) => {
       return (
         (
           <Section key={index} section={section} />
         )
       );
     }, this);
-  }
-
-  getListOfSections(postLookupId) {
-    var post = getPost(postLookupId);
-    var sectionIds = post.sectionLookupIdList;
-    var sections = [];
-    sectionIds.forEach(function(sectionLookupId) {
-        sections.push(getSection(sectionLookupId));
-    });
-    return sections;
   }
 
     // Navigation

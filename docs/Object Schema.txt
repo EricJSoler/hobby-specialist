@@ -9,18 +9,13 @@ MainPage: {
 Post: {
 	postLookupId: uuid
 	sectionLookupIdList: List<SectionLookupId> //list of uuid strings, maintains ordering
-	postSummaryLookupId: uuid
 	authorLookupId: uuid
-}
-
-//pull this on main app load
-//List<Post>
-PostSummary: {
-	postSummaryLookupId: uuid
-	title: string
-	content: {
-		image:
-		text:
+	postSummary: {
+		title: string
+		content: {
+			image:
+			text:
+		}
 	}
 }
 
