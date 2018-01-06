@@ -74,12 +74,12 @@ export default class AuthScreen extends React.Component {
         };
         return (
             <View>
-                <Button onPress={this.onLoginPress.bind(this)}>
+                <Button style={{marginBottom: 10}} block light onPress={this.onLoginPress.bind(this)}>
                     <Text>
                         Login
                     </Text>
                 </Button>
-                <Button onPress={this.onSignUpPress.bind(this)}>
+                <Button block light onPress={this.onSignUpPress.bind(this)}>
                     <Text>
                         Sign Up
                     </Text>

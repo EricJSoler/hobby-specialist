@@ -95,7 +95,7 @@ export default class HomeScreen extends React.Component {
         <Container>
           <Header>
             <Left>
-              <Button onPress={this.onSignOutPress.bind(this)}>
+              <Button transparent onPress={this.onSignOutPress.bind(this)}>
                 <Text>
                   Sign Out
                 </Text>
