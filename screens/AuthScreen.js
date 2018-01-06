@@ -11,12 +11,12 @@ export default class AuthScreen extends React.Component {
   }
 
   // Adding this so i don;t have to actually type for this screen just press login
-  componentWillMount()
+  /*componentWillMount()
   {
     this.setState(previousState => {
         return {email: 'eric@cool.com', password: '12345678'};
       });
-  }
+  }*/
 
   render() {
     return (

@@ -31,32 +31,6 @@ export default class PostScreen extends React.Component {
     }.bind(this));
   }
 
-  upsertToListOfSections(key, section) {
-    var upsert = {};
-    upsert[key] = {$set: section};
-    this.setState(previousState => ({
-      sections: update(this.state.sections, upsert)
-    }));
-  }
-
-  removeFromListOfSections(key) {
-    this.setState(previousState => ({
-      sections: update(previousState.sections, {$unset: [key]})
-    }));
-  }
-
-  componentDidMount() {
-    listenForAddedSections(this.upsertToListOfSections.bind(this));
-    listenForChangedSections(this.upsertToListOfSections.bind(this));
-    listenForRemovedSections(this.removeFromListOfSections.bind(this));
-  }
-
-  componentWillUnmount() {
-    stopListeningForAddedSections();
-    stopListeningForChangedSections();
-    stopListeningForRemovedSections();
-  }
-
   setDefaults() {
     stateToValidate = {
       post: this.state.post
