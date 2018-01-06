@@ -211,7 +211,8 @@ export default class PostEditorScreen extends React.Component {
                 image: this.state.image,
                 text: this.state.summaryText,
             }
-        }
+        },
+        sectionLookupIdList: this.props.navigation.state.params.complexPost.post.sectionLookupIdList
       }
   }
 

@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, Icon, Card, CardItem} from "native-base";
 import { getAllPosts } from '../utils/pull';
-import PostSummary  from '../Components/PostSummary';
+import PostSummaryComplex  from '../Components/PostSummaryComplex';
+import uuid from 'uuid/v4';
+import { writeSection, writePost } from '../utils/write';
 
 export default class AuthoringScreen extends React.Component {
 
@@ -71,7 +73,7 @@ export default class AuthoringScreen extends React.Component {
       return publishedPosts.map((publishedPost, index) => {
           return (
               (
-                <PostSummary key={index} postSummary={publishedPost.postSummary} onPressCallback={() => this.navigateToPostEditor(this.createComplexPostFromPost(publishedPost), true)} />
+                <PostSummaryComplex key={index} postSummary={publishedPost.postSummary} onEditPressCallback={() => this.navigateToPostEditor(this.createComplexPostFromPost(publishedPost), true)}   onPublishPressCallback={console.log()} />
               )
           );
       });
@@ -82,7 +84,7 @@ export default class AuthoringScreen extends React.Component {
     return complexPosts.map((complexPost, index) => {
       return (
         (
-          <PostSummary key={index} postSummary={complexPost.post.postSummary} onPressCallback={() => this.navigateToPostEditor(complexPost)} />
+          <PostSummaryComplex key={index} postSummary={complexPost.post.postSummary} onEditPressCallback={() => this.navigateToPostEditor(complexPost)}   onPublishPressCallback={() => this.publishComplexPost(complexPost)}  />
         )
       );
     }, this);
@@ -141,6 +143,58 @@ export default class AuthoringScreen extends React.Component {
       });
   }
 
+  // TODO:
+  publishComplexPost(complexPost)
+  {
+
+    var post = complexPost.post;
+
+    if(!post.sectionLookupIdList)
+    {
+      post.sectionLookupIdList = []
+    }
+
+    complexPost.sections.forEach(function(section) {
+      if(section.sectionLookupId)
+      {
+        // Upsert over section
+        writeSection(section, section.sectionLookupId);
+      }
+      else
+      {
+        // Insert new section and saveId
+        var sectionId = uuid();
+        var sectionWithUUID = section;
+        sectionWithUUID.sectionLookupId = sectionId;
+        writeSection(sectionWithUUID, sectionId); 
+        post.sectionLookupIdList.push(sectionId);
+      }
+    });
+
+    if(!post.postLookupId)
+    {
+      post.postLookupId = uuid();
+    }
+
+    console.log("POST", post, "\n", "SECTIONLIST", post.sectionLookupIdList);
+    writePost(post, post.postLookupId);
+    this.removeFromComplexPosts(complexPost);
+  }
+
+  removeFromComplexPosts(complexPost)
+  {
+     var tempComplexPosts = this.state.complexPosts;
+     tempComplexPosts.splice(complexPost.index, 1);
+
+     tempComplexPosts.forEach(function(val, index){
+       val.index = index;
+     });
+
+     this.setState((previousState) => {
+       return {complexPosts: tempComplexPosts};
+     });
+  }
+
   // Utilities
   createEmptyComplexPost()
   {
@@ -156,6 +210,7 @@ export default class AuthoringScreen extends React.Component {
 
   createComplexPostFromPost(post)
   {
+
     var emptyComplexPost = this.createEmptyComplexPost();
     emptyComplexPost.post = post;
 

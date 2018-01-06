@@ -112,7 +112,6 @@ export default class SectionEditorScreen extends React.Component {
   createSectionJSON()
   {
     return {
-      sectionLookupId: 'SectionLookUpID_01',
 	    header: this.state.headerText,
 	    content: this.createSectionContentJSON(),
 	    footer: this.state.footerText
