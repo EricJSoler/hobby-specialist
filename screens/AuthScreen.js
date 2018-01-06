@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
-import database from '../config/database/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from '../utils/auth';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label } from "native-base";
 
 export default class AuthScreen extends React.Component {
@@ -43,8 +43,7 @@ export default class AuthScreen extends React.Component {
   onLoginPress() {
       this.setState({error: '', loading: true});
       const { email, password } = this.state;
-      database.auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
+      signInWithEmailAndPassword(email, password).then(() => {
         this.setState({error: '', loading: false});
         this.props.navigation.navigate('Home');
       })
@@ -56,8 +55,7 @@ export default class AuthScreen extends React.Component {
   onSignUpPress() {
         this.setState({error: '', loading: true});
         const { email, password } = this.state;
-        database.auth().createUserWithEmailAndPassword(email, password)
-        .then(() => {
+        createUserWithEmailAndPassword(email, password).then(() => {
             this.setState({error: '', loading: false});
             this.props.navigation.navigate('Home');
           })
@@ -76,12 +74,12 @@ export default class AuthScreen extends React.Component {
         };
         return (
             <View>
-                <Button onPress={this.onLoginPress.bind(this)}>
+                <Button style={{marginBottom: 10}} block light onPress={this.onLoginPress.bind(this)}>
                     <Text>
                         Login
                     </Text>
                 </Button>
-                <Button onPress={this.onSignUpPress.bind(this)}>
+                <Button block light onPress={this.onSignUpPress.bind(this)}>
                     <Text>
                         Sign Up
                     </Text>

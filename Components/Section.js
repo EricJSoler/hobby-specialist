@@ -23,40 +23,18 @@ export default class Section extends React.Component {
     constructor(props)
     {
         super(props);
-        
-        stateToValidate = {
-            section: this.props.section,
-          };
-      
-        var defaultObjectsUsed = [];
 
-        if (!stateToValidate.section)
-        {
-            console.log(CLAZZ_NAME, 'Expects section as a property');
-            stateToValidate.section = _defaultObjGenerator.generateDefaultSection();
-            defaultObjectsUsed.push({ key: 'props.section', value: stateToValidate.section});
+        this.state = {
+            header: this.props.section.header,
+            footer: this.props.section.footer,
+            content: this.props.section.content,
         }
+    }
 
-        if (!stateToValidate.section.content)
-        {
-            console.log(CLAZZ_NAME, 'Expects valid section.content as a property');
-            stateToValidate.section.content = _defaultObjGenerator.generateDefaultSectionContent(SectionContentConstants.IMAGE_TEXT);
-            defaultObjectsUsed.push({ key: 'props.section.content', value: stateToValidate.section.content});
-        }
-
-        if (!stateToValidate.section.content.type)
-        {
-            console.log(CLAZZ_NAME, 'Expects valid section.content.type as a property');
-            stateToValidate.section.content = _defaultObjGenerator.generateDefaultSectionContent(SectionContentConstants.IMAGE_TEXT);
-            defaultObjectsUsed.push({ key: 'props.section.content', value: stateToValidate.section.content});
-        }
-
-        if(defaultObjectsUsed.length > 0)
-        {
-          console.warn(CLAZZ_NAME, 'Default objects used ', defaultObjectsUsed);
-        }
-
-        this.state = stateToValidate;
+    componentWillReceiveProps(nextProps) {
+        this.setState(previousState => {
+            return {header: nextProps.section.header, footer: nextProps.section.footer, content: nextProps.section.content};
+          });
     }
 
     render() {
@@ -64,14 +42,14 @@ export default class Section extends React.Component {
             <Card style={{flex: 1}} >
                 <CardItem>
                     <Body>  
-                        <Text>{this.state.section.header}</Text>
+                        <Text>{this.state.header}</Text>
                     </Body>
                 </CardItem>
-                {this.renderSectionContent(this.state.section.content)} 
+                {this.renderSectionContent(this.state.content)} 
                 <CardItem>
                     <Body>
                         <Text>
-                            {this.state.section.footer}
+                            {this.state.footer}
                         </Text>
                     </Body>
                 </CardItem>

@@ -39,7 +39,7 @@ export default class AuthoringScreen extends React.Component {
           </Right>
         </Header>
         <Content padder>
-            <Button onPress={() => this.navigateToPostEditor()}>
+            <Button style={{marginBottom: 10}} light block onPress={() => this.navigateToPostEditor()}>
                 <Text>
                     Add Post 
                 </Text> 

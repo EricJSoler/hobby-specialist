@@ -4,6 +4,7 @@ import { Thumbnail, Card, CardItem, Left, Body } from "native-base";
 import * as PostSummaryConstants from '../config/constants/PostSummaryConstants';
 import { generateDefaultPostSummary } from '../utils/defaultObjGenerator';
 
+
 const CLAZZ_NAME = '[PostSummary]';
 
 // Returns html for rendering card to represent a post summary

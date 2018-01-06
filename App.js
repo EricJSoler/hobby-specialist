@@ -7,7 +7,7 @@ import uuid from 'uuid/v4';
 export default class App extends React.Component {
   constructor() {
     super();
-    var m = uuid();
+    /*var m = uuid();
     var section = {
       sectionLookupId: m,
       header: 'poop', // V2 may get componatized
@@ -32,7 +32,7 @@ export default class App extends React.Component {
       authorLookupId: 'poop'
     }
     writePost(post, t);
-    writeSection(section, m);
+    writeSection(section, m);*/
   }
 
   render() {
