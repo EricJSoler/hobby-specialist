@@ -45,7 +45,7 @@ export default class AuthoringScreen extends React.Component {
                 </Text> 
             </Button>
             <Text>
-              Published Posts:
+              Unpublished Posts:
             </Text>
             {this.renderComplexPostsPreview(this.state.complexPosts)}
             <Text>
