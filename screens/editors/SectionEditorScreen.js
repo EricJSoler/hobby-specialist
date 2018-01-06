@@ -36,7 +36,7 @@ export default class SectionEditorScreen extends React.Component {
                 footerText: this.props.navigation.state.params.complexSection.section.footer
               };
             });
-            console.log(this.props.navigation.state.params.complexSection);
+            
             switch (this.props.navigation.state.params.complexSection.section.content.type)
             {
               case SectionContentConstants.IMAGE_TEXT: this.setState(previousState => {

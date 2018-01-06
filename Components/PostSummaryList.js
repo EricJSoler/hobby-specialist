@@ -2,32 +2,35 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Thumbnail, Card, CardItem, Left, Body } from "native-base";
 import * as PostSummaryConstants from '../config/constants/PostSummaryConstants';
-import { generateDefaultPostSummary } from '../utils/defaultObjGenerator';
+import {getDefaultPostSummary} from '../utils/defaultObjGenerator';
 
-
-const CLAZZ_NAME = '[PostSummary]';
+const CLAZZ_NAME = '[PostSummaryList]';
 
 // Returns html for rendering card to represent a post summary
 // Inputs:
-// postSummary:PostSummary: {
-// 	postSummaryLookupId: uuid
-// 	title: string
-// 	content: {
-// 		image:
-// 		text:
-// 	}
-// }
+// postSummarys:[ PostSummary: {
+//     	postSummaryLookupId: uuid
+//     	title: string
+//     	content: {
+//     		image:
+//     		text:
+// 	    }
+//  }
+// ]
 // onPressCallback: optional: a call back function for when this component is pressed 
-export default class PostSummary extends React.Component {
+export default class PostSummaryList extends React.Component {
     
     constructor(props)
     {
         super(props);
 
-        if (!this.props.postSummary)
+        if (!this.props.postSummarys)
         {
-            this.props.postSummary = generateDefaultPostSummary();
-            console.warn(CLAZZ_NAME, 'Expects a postSummary as a property', {usingPostSummary: this.props.postSummary});
+            var postSummaryList = [];
+            postSummaryList.push(getDefaultPostSummary());
+            this.props.postSummarys = postSummaryList;
+
+            console.warn(CLAZZ_NAME, 'Expects a postSummarys as a property', {usingPostSummarys: this.props.postSummarys});
         }
 
         if (!this.props.postSummary.content)
