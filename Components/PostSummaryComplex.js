@@ -38,14 +38,14 @@ export default class PostSummaryComplex extends React.Component {
                         </Left>
                         <Right>
                             <Left>
-                                <Button onPress={this.props.onEditPressCallback}>
+                                <Button light onPress={this.props.onEditPressCallback}>
                                     <Text>
                                         Edit
                                     </Text> 
                                 </Button>
                             </Left>
                             <Right>
-                                <Button onPress={this.props.onPublishPressCallback}>
+                                <Button light onPress={this.props.onPublishPressCallback}>
                                     <Text>
                                         Publish 
                                     </Text> 
