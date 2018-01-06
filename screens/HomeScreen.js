@@ -2,7 +2,9 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PostSummary from '../Components/PostSummary'
 import { signOut } from '../utils/auth';
+import update from 'immutability-helper';
 import { getAllPosts } from '../utils/pull';
+import { listenForAddedPosts, stopListeningForAddedPosts, listenForChangedPosts, stopListeningForChangedPosts, listenForRemovedPosts, stopListeningForRemovedPosts } from '../utils/listen';
 import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button } from "native-base";
 
 export default class HomeScreen extends React.Component {
@@ -21,7 +23,7 @@ export default class HomeScreen extends React.Component {
     super();
     this.state = {
       ready: false,
-      posts: []
+      posts: {}
     }
   }
 
@@ -31,6 +33,32 @@ export default class HomeScreen extends React.Component {
           return { ready: true, posts: posts };
         });
       }.bind(this));
+  }
+
+  upsertToListOfPosts(key, post) {
+    var upsert = {};
+    upsert[key] = {$set: post};
+    this.setState(previousState => ({
+      posts: update(previousState.posts, upsert)
+    }));
+  }
+
+  removeFromListOfPosts(key) {
+    this.setState(previousState => ({
+      posts: update(previousState.posts, {$unset: [key]})
+    }));
+  }
+
+  componentDidMount() {
+    listenForAddedPosts(this.upsertToListOfPosts.bind(this));
+    listenForChangedPosts(this.upsertToListOfPosts.bind(this));
+    listenForRemovedPosts(this.removeFromListOfPosts.bind(this));
+  }
+
+  componentWillUnmount() {
+    stopListeningForAddedPosts();
+    stopListeningForChangedPosts();
+    stopListeningForRemovedPosts();
   }
 
   render() {
@@ -53,7 +81,7 @@ export default class HomeScreen extends React.Component {
           </Header>
           <Content padder>
             <Text>
-              Loading
+              Loading Posts
             </Text>
           </Content>
           <Footer>
@@ -119,8 +147,8 @@ export default class HomeScreen extends React.Component {
 
   // invokes getListOfPostSummaries to get the json
   // and constructs/returns the post summary components
-  renderListOfPosts(listOfPosts) { //TODO: this list of post summaries is using incorrect object schema
-    return listOfPosts.map((post, index) => {
+  renderListOfPosts(posts) {
+    return Object.values(posts).map((post, index) => {
       return (
         (
           <PostSummary key={index} postSummary={post.postSummary} onPressCallback={() => this.navigateToPostScreen(post)} />

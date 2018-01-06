@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { Thumbnail, Card, CardItem, Left, Body } from "native-base";
 import * as PostSummaryConstants from '../config/constants/PostSummaryConstants';
-import {getDefaultPostSummary} from '../utils/defaultObjGenerator';
+import {generateDefaultPostSummary} from '../utils/defaultObjGenerator';
 
 const CLAZZ_NAME = '[PostSummary]';
 
@@ -25,7 +25,7 @@ export default class PostSummary extends React.Component {
 
         if (!this.props.postSummary)
         {
-            this.props.postSummary = getDefaultPostSummary();
+            this.props.postSummary = generateDefaultPostSummary();
             console.warn(CLAZZ_NAME, 'Expects a postSummary as a property', {usingPostSummary: this.props.postSummary});
         }
 
