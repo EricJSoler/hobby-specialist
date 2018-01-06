@@ -1,57 +1,54 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label} from "native-base";
-import * as SectionContentConstants from '../config/constants/SectionContentConstants';
+import { Text } from 'react-native';
+import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, Form, Item, Input, Label} from "native-base";
+import * as SectionContentConstants from '../../config/constants/SectionContentConstants';
 
+// TODO: Add preview
 export default class SectionEditorScreen extends React.Component {
 
     constructor(props)
     {
         super(props);
-        
+        // TODO: validation
         this.state = {
           headerText: '',
           footerText: '',
           imageUrl: '',
           bodyText: '',
-          modifyingExisting: this.props.navigation.state.params.modifyingExisting
         };
     }
 
     // componentDidMount() is invoked immediately after a component is mounted. Initialization that requires DOM nodes should go here. If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
      componentDidMount()
      {
-        this.tryConfigureForEditingExistingSection();
-     }
-
-    // Will check appropriate params specified through navigator and overwrite existing state to match
-    // if we are editing an existing section
-    tryConfigureForEditingExistingSection()
-    {
-      if(this.props.navigation.state.params.complexSection.index === -1)
-      {
-        return;
-      }
-      else
-      {
-        this.setState(previousState => {
-          return { 
-            headerText:  this.props.navigation.state.params.complexSection.section.header,
-            footerText: this.props.navigation.state.params.complexSection.section.footer
-          };
-        });
-
-        switch (this.props.navigation.state.params.complexSection.content.type)
+        // Will check appropriate params specified through navigator and overwrite existing state to match
+        // if we are editing an existing section
         {
-          case SectionContentConstants.IMAGE_AND_TEXT: this.setState(previousState => {
-            return { 
-              imageUrl: this.props.navigation.state.params.complexSection.content.image,
-              bodyText: this.props.navigation.state.params.complexSection.content.text
-            };
-          });
+          if(this.props.navigation.state.params.complexSection.index === -1)
+          {
+            return;
+          }
+          else
+          {
+            this.setState(previousState => {
+              return { 
+                headerText:  this.props.navigation.state.params.complexSection.section.header,
+                footerText: this.props.navigation.state.params.complexSection.section.footer
+              };
+            });
+            console.log(this.props.navigation.state.params.complexSection);
+            switch (this.props.navigation.state.params.complexSection.section.content.type)
+            {
+              case SectionContentConstants.IMAGE_TEXT: this.setState(previousState => {
+                return { 
+                  imageUrl: this.props.navigation.state.params.complexSection.section.content.image,
+                  bodyText: this.props.navigation.state.params.complexSection.section.content.text
+                };
+              });
+            }
+          }
         }
-      }
-    }
+     }
 
   render() {
     return (
@@ -92,7 +89,7 @@ export default class SectionEditorScreen extends React.Component {
             </Item>
           </Form>
           <Button onPress={() => this.saveSection()}>
-            <Text>Done adding section</Text>
+            <Text>Save Section</Text>
           </Button>
         </Content>
         <Footer>
@@ -102,42 +99,35 @@ export default class SectionEditorScreen extends React.Component {
     );
   }
 
+  // invokes updateComplexSectionCallback effectively saving the section created
+  // navigates back to previous screen should be PostEditor
   saveSection()
   {
-    this.props.navigation.state.params.complexSection.content = this.createSectionContentJSON();
-    this.props.navigation.state.params.complexSection.section= this.createSectionJSON(this.props.navigation.state.params.complexSection.content.contentLookupId);
+    this.props.navigation.state.params.complexSection.section = this.createSectionJSON();
+    console.log(this.props.navigation.state.params.complexSection);
     this.props.navigation.state.params.updateComplexSectionCallback(this.props.navigation.state.params.complexSection);
     this.props.navigation.goBack();
   }
 
-  createSectionJSON(contentLookupId)
+  createSectionJSON()
   {
     return {
       sectionLookupId: 'SectionLookUpID_01',
 	    header: this.state.headerText,
-	    content: contentLookupId,
+	    content: this.createSectionContentJSON(),
 	    footer: this.state.footerText
     }
   }
 
   createSectionContentJSON()
   {
-    // Needs logic based on fields filled from ui
-    computedContentType = 'ImageAndTextNoVideo';
+    // TODO: Needs logic based on fields filled from ui
+    computedContentType = SectionContentConstants.IMAGE_TEXT;
     return {
-      contentLookupId: '',
-      type: computedContentType, //x number of properties dependent upon hardcoded named type      
+      type: computedContentType, 
       image: this.state.imageUrl,
       text: this.state.bodyText
     }
   }
+  
 }
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });

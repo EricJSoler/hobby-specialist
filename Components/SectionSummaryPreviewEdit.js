@@ -1,21 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { Container, Thumbnail,  Header, Footer, Content, Card, CardItem, Left, Body, Title, Right, Button, Icon, Form, Item, Input, Label} from "native-base";
+import { Text } from 'react-native';
+import { Footer, Card, CardItem, Body, Title, Right, Button } from "native-base";
+
+const CLAZZ_NAME = '[SectionSummaryPreviewEdit]';
 
 // Returns html for rendering a card that displays a preview view of a section 
 // Inputs: 
 // section: a section object abiding by the following schema
-//  Section: {
-//	sectionLookupId: uuid
-//	header: string
-//	content: contentLookupId
-//	footer: string
-//  }
-// content:a section content object abiding by the following schema
-// Content {
-//	contentLookupId: uuid
-//	type: StringNamedType //x number of properties dependent upon hardcoded named type
-//  }
+// {
+// 	sectionLookupId: uuid
+// 	header: string // V2 may get componatized
+// 	footer: string // V2 may get componatized
+//     content: {
+// 		type: StringNamedType //x number of properties dependent upon hardcoded named type	
+// 	}
+// }
 //  editCallback: a callback function that will be invoked when the edit button is pressed
 export default class SectionSummaryPreviewEdit extends React.Component {
     
@@ -25,17 +24,12 @@ export default class SectionSummaryPreviewEdit extends React.Component {
         
         if (!props.section)
         {
-            console.log('Section summary preview edit expects a section as a property')
-        }
-
-        if (!props.content)
-        {
-            console.log('Section summary preview edit expects a content as a property')
+            console.warn(CLAZZ_NAME, 'Expects a section as a property')
         }
 
         if (!props.editExistingSectionCallback)
         {
-            console.log('Section summary preview edit expects a section as a property')
+            console.warn(CLAZZ_NAME, 'Expects a editExistingSectionCallback as a property')
         }
     }
 
@@ -44,7 +38,7 @@ export default class SectionSummaryPreviewEdit extends React.Component {
             <Card style={{flex: 1}} >
             <CardItem>
                 <Body>  
-                    <Text>{this.props.section.header}</Text>
+                    <Title>{this.props.section.header}</Title>
                 </Body>
                 <Footer>
                     <Right>
@@ -59,4 +53,5 @@ export default class SectionSummaryPreviewEdit extends React.Component {
         </Card> 
         );
     }
+
 }

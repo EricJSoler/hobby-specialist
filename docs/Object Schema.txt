@@ -4,20 +4,6 @@ MainPage: {
 	postSummaryLookupIdList: List<PostSummary>
 }
 
-//pull this on main app load
-//List<Post>
-PostSummary: {
-	postSummaryContentLookupId: 
-	postSummaryLookupId: uuid
-}
-
-PostSummaryContent: {
-	postSummaryContentLookupId: uuid
-	title: 
-	image:
-	text:
-}
-
 //pull this on post load stage 1 (get the posts)
 //List<Section>
 Post: {
@@ -27,23 +13,27 @@ Post: {
 	authorLookupId: uuid
 }
 
+//pull this on main app load
+//List<Post>
+PostSummary: {
+	postSummaryLookupId: uuid
+	title: string
+	content: {
+		image:
+		text:
+	}
+}
+
 //pull this on post load stage 2 (rendering)
 //Section
 Section: {
 	sectionLookupId: uuid
-	header: string
-	content: contentLookupId
-	footer: string
+	header: string // V2 may get componatized
+	footer: string // V2 may get componatized
+    content: {
+		type: StringNamedType //x number of properties dependent upon hardcoded named type	
+	}
 }
-
-//pull this on content load
-//use the named type to lookup the schema of the object and pull the necessary attributes
-Content {
-	contentLookupId: uuid
-	type: StringNamedType //x number of properties dependent upon hardcoded named type
-}
-
-
 
 SCREENS
 HomeScreen -- List of Post Summary views

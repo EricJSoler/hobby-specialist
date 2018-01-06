@@ -10,6 +10,14 @@ export default class AuthScreen extends React.Component {
       this.state = {email: '', password: '', error: '', loading: false};
   }
 
+  // Adding this so i don;t have to actually type for this screen just press login
+  componentWillMount()
+  {
+    this.setState(previousState => {
+        return {email: 'eric@cool.com', password: '12345678'};
+      });
+  }
+
   render() {
     return (
         <Container>
@@ -18,11 +26,11 @@ export default class AuthScreen extends React.Component {
             <Form>
               <Item floatingLabel>
                 <Label>Username</Label>
-                <Input onChangeText={email => this.setState({email})} />
+                <Input onChangeText={email => this.setState({email})} value={this.state.email}/>
               </Item>
               <Item floatingLabel last>
                 <Label>Password</Label>
-                <Input onChangeText={password => this.setState({password})} />
+                <Input onChangeText={password => this.setState({password})} value={this.state.password}/>
               </Item>
             </Form>
             {this.renderButtonOrLoading()}

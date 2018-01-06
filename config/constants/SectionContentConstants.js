@@ -1,2 +1,3 @@
-export const IMAGE_AND_TEXT = 'ImageAndTextNoVideo';
+
+export const IMAGE_TEXT = 'ImageAndTextNoVideo';
 
