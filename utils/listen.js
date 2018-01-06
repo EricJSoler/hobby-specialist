@@ -34,18 +34,6 @@ export function listenForRemovedPosts(removePostCallBack) {
     listenForRemoved('post', removePostCallBack);
 }
 
-export function listenForAddedSections(addSectionCallBack) {
-    listenForAdded('section', addSectionCallBack);
-}
-
-export function listenForChangedSections(changedSectionCallBack) {
-    listenForChanged('section', changedSectionCallBack);
-}
-
-export function listenForRemovedSections(removeSectionCallBack) {
-    listenForRemoved('section', removeSectionCallBack);
-}
-
 export function stopListeningForAddedPosts() {
     stopListening('post', 'child_added');
 }
@@ -56,16 +44,4 @@ export function stopListeningForChangedPosts() {
 
 export function stopListeningForRemovedPosts() {
     stopListening('post', 'child_removed');
-}
-
-export function stopListeningForAddedSections() {
-    stopListening('section', 'child_added');
-}
-
-export function stopListeningForChangedSections() {
-    stopListening('section', 'child_changed');
-}
-
-export function stopListeningForRemovedSections() {
-    stopListening('section', 'child_removed');
 }
