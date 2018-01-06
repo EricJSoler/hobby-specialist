@@ -111,13 +111,13 @@ export default class PostEditorScreen extends React.Component {
                             value={this.state.summaryText}/>
                 </Item>
             </Form>
-            <Button onPress={() => this.savePost()}>
+            <Button block light style={{marginBottom: 10}} onPress={() => this.savePost()}>
                 <Text>
                     Save Post
                 </Text> 
             </Button>
             {this.renderSectionsPreview()}
-            <Button onPress={() => this.navigateToSectionEditor()}>
+            <Button block light style={{marginTop: 10}} onPress={() => this.navigateToSectionEditor()}>
                 <Text>
                     Add Section
                 </Text> 

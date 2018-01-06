@@ -88,7 +88,7 @@ export default class SectionEditorScreen extends React.Component {
                         value={this.state.footerText}/>
             </Item>
           </Form>
-          <Button onPress={() => this.saveSection()}>
+          <Button block light style={{marginTop: 10}} onPress={() => this.saveSection()}>
             <Text>Save Section</Text>
           </Button>
         </Content>

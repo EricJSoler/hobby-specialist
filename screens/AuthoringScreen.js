@@ -28,7 +28,7 @@ export default class AuthoringScreen extends React.Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
+            <Button light onPress={() => this.props.navigation.goBack()}>
                 <Icon name="arrow-back" />
             </Button>
           </Left>
@@ -44,16 +44,13 @@ export default class AuthoringScreen extends React.Component {
                     Add Post 
                 </Text> 
             </Button>
+            <Text>
+              Published Posts:
+            </Text>
             {this.renderComplexPostsPreview(this.state.complexPosts)}
-            <Card>
-              <CardItem>
-                <Body>
-                  <Text>
-                    Published Posts:
-                  </Text>
-                </Body>
-              </CardItem>
-            </Card>
+            <Text>
+              Published Posts:
+            </Text>
             {this.renderPublishedPostsPreview(this.state.publishedPosts)}
         </Content>
         <Footer>

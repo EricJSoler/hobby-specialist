@@ -42,7 +42,7 @@ export default class SectionSummaryPreviewEdit extends React.Component {
                 </Body>
                 <Footer>
                     <Right>
-                        <Button onPress={this.props.editExistingSectionCallback}>
+                        <Button light onPress={this.props.editExistingSectionCallback}>
                             <Text>
                                 Edit Section
                             </Text> 
