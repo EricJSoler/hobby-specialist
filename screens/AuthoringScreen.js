@@ -18,7 +18,7 @@ export default class AuthoringScreen extends React.Component {
   componentWillMount() {
     getAllPosts().then(function(posts) {
       this.setState(previousState => {
-        return { ready: true, publishedPosts: posts };
+        return { ready: true, publishedPosts: Object.values(posts) };
       });
     }.bind(this));
 }
