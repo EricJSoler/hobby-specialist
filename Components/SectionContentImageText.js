@@ -19,39 +19,16 @@ export default class SectionContentImageText extends React.Component {
     constructor(props)
     {
         super(props);
-
-        stateToValidate = {
-            content: this.props.content,
-          };
-      
-        var defaultObjectsUsed = [];
-
-        if (!stateToValidate.content)
-        {
-            console.log(CLAZZ_NAME, 'Expects content as a property');
-            stateToValidate.content = generateDefaultSectionContent(SectionContentConstants.IMAGE_TEXT);
-            defaultObjectsUsed.push({ key: 'props.content', value: stateToValidate.content});
+        this.state = {
+            image: this.props.content.image,
+            text: this.props.content.text,
         }
+    }
 
-        if (!stateToValidate.content.image)
-        {
-            console.log(CLAZZ_NAME, 'Expects  content.image as a property');
-            stateToValidate.content.image = SectionContentImageTextConstants.DEFAULT_IMAGE;
-            defaultObjectsUsed.push({ key: 'content.image', value: stateToValidate.content.image});
-        }
-
-        if (!stateToValidate.content.text)
-        {
-            console.log(CLAZZ_NAME, 'Expects content.text as a property setting to empty string');
-            stateToValidate.content.text = '';
-        }
-
-        if(defaultObjectsUsed.length > 0)
-        {
-          console.warn(CLAZZ_NAME, 'Default objects used ', defaultObjectsUsed);
-        }
-
-        this.state = stateToValidate;
+    componentWillReceiveProps(nextProps) {
+        this.setState(previousState => {
+            return {image: nextProps.content.image, text: nextProps.content.text};
+          });
     }
 
     render() {
@@ -62,11 +39,11 @@ export default class SectionContentImageText extends React.Component {
                         <View style={{flex: 1, width: 200, height: 200, margin: 5}}>         
                             <Image 
                             style={{flex:1, height: undefined, width: undefined, resizeMode: 'contain'}}
-                            source={{uri: this.state.content.image}}
+                            source={{uri: this.state.image}}
                             />
                         </View>
                         <Text>
-                            { this.state.content.text}
+                            { this.state.text}
                         </Text>
                     </Body>
                 </CardItem>
