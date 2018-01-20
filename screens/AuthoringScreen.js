@@ -164,7 +164,8 @@ export default class AuthoringScreen extends React.Component {
 
     if (!post.postLookupId)
     {
-      post.postLookupId = uuid();
+      var postRef = getPostsRef().push();
+      post.postLookupId = postRef.key;
     }
 
     writePost(post, post.postLookupId);
