@@ -1,4 +1,5 @@
 import database from './firebase';
+import * as DatabaseConstants from '../constants/DatabaseConstants';
 
 var refs = {}
 
@@ -11,4 +12,12 @@ export function getRef(api) {
         setRef(api);
     }
     return refs[api];
+}
+
+export function getSectionsRef() {
+    return getRef(DatabaseConstants.SECTION);
+}
+
+export function getPostsRef() {
+    return getRef(DatabaseConstants.POST);
 }
