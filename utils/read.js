@@ -1,19 +1,20 @@
 import database from '../config/database/firebase';
+import * as DatabaseConstants from '../config/constants/DatabaseConstants';
 
 function getAllFromDB(api) {
-    return database.database().ref('/' + api + '/').once('value');
+    return database.database().ref(DatabaseConstants.SLASH + api + DatabaseConstants.SLASH).once(DatabaseConstants.VALUE);
 }
 
 function getFromDB(api, lookupId) {
-    return database.database().ref('/' + api + '/' + lookupId).once('value');
+    return database.database().ref(DatabaseConstants.SLASH + api + DatabaseConstants.SLASH + lookupId).once(DatabaseConstants.VALUE);
 }
 
 export function getPosts() {
-    return getAllFromDB('post');
+    return getAllFromDB(DatabaseConstants.POST);
 }
 
 export function getSectionById(lookupId) {
-    return getFromDB('section', lookupId);
+    return getFromDB(DatabaseConstants.SECTION, lookupId);
 }
 
 

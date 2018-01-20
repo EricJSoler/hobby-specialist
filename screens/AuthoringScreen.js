@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, Icon, Card, CardItem} from "native-base";
 import { getAllPosts } from '../utils/pull';
 import PostSummaryComplex  from '../Components/PostSummaryComplex';
-import uuid from 'uuid/v4';
 import { writeSection, writePost } from '../utils/write';
+import { getSectionsRef, getPostsRef } from '../config/database/ref';
 
 export default class AuthoringScreen extends React.Component {
 
@@ -135,7 +135,8 @@ export default class AuthoringScreen extends React.Component {
       }
       else {
         // Insert new section and saveId
-        var sectionId = uuid();
+        var sectionRef = getSectionsRef().push();
+        var sectionId = sectionRef.key;
         var sectionWithUUID = section;
         sectionWithUUID.sectionLookupId = sectionId;
         writeSection(sectionWithUUID, sectionId); 
@@ -143,7 +144,8 @@ export default class AuthoringScreen extends React.Component {
       }
     });
     if (!post.postLookupId) {
-      post.postLookupId = uuid();
+      var postRef = getPostsRef().push();
+      post.postLookupId = postRef.key;
     }
     writePost(post, post.postLookupId);
     this.removeFromComplexPosts(complexPost);
