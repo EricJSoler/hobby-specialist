@@ -61,17 +61,21 @@ export default class HomeScreen extends React.Component {
     stopListeningForRemovedPosts();
   }
 
+  /*
+  TODO: add signout
+                <Button onPress={this.onSignOutPress.bind(this)}>
+                <Text>
+                  Sign Out
+                </Text>
+              </Button>
+  */
+
   render() {
     if (!this.state.ready) {
       return (
         <Container>
           <Header>
             <Left>
-              <Button onPress={this.onSignOutPress.bind(this)}>
-                <Text>
-                  Sign Out
-                </Text>
-              </Button>
             </Left>
             <Body>
               <Title>Home</Title>
@@ -95,11 +99,6 @@ export default class HomeScreen extends React.Component {
         <Container>
           <Header>
             <Left>
-              <Button transparent onPress={this.onSignOutPress.bind(this)}>
-                <Text>
-                  Sign Out
-                </Text>
-              </Button>
             </Left>
             <Body>
               <Title>Home</Title>
