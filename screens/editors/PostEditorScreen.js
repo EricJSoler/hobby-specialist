@@ -8,10 +8,8 @@ import { getSectionById } from '../../utils/read';
 // TODO: add remove
 export default class PostEditorScreen extends React.Component {
 
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
-
         this.state = { 
             complexSections: [],
             titleText: '',
@@ -19,18 +17,14 @@ export default class PostEditorScreen extends React.Component {
             summaryText: '',
             postId: undefined
         }
-
-
     }
 
     componentDidMount() {
         // TODO: move to appropriate lifecycle method
-        if (!this.props.navigation.state.params.shouldInitializeFromComplexPost)
-        {
+        if (!this.props.navigation.state.params.shouldInitializeFromComplexPost) {
           return;
         }
-        else
-        {
+        else {
             console.log('updating existing');
             this.setState(previousState => {
                 return { 
@@ -39,7 +33,6 @@ export default class PostEditorScreen extends React.Component {
                   summaryText: this.props.navigation.state.params.complexPost.post.postSummary.content.text
                 };
               });
-
             this.props.navigation.state.params.complexPost.sections.forEach(function(section) {
                 var complexSection = {
                     section: section,
@@ -48,22 +41,19 @@ export default class PostEditorScreen extends React.Component {
 
                 this.state.complexSections.push(complexSection);
             }.bind(this));
-
-            if (this.props.navigation.state.params.isPublishedPost)
-            {
+            if (this.props.navigation.state.params.isPublishedPost) {
                 this.state.postLookupId = this.props.navigation.state.params.complexPost.post.postLookupId;
                 var sections = [];
                 var promises = [];
-            
-                this.props.navigation.state.params.complexPost.post.sectionLookupIdList.forEach(function(sectionId) {
-                  promises.push(getSectionById(sectionId));
-                });
-            
+                if (this.props.navigation.state.params.complexPost.post.sectionLookupIdList) {
+                    this.props.navigation.state.params.complexPost.post.sectionLookupIdList.forEach(function(sectionId) {
+                        promises.push(getSectionById(sectionId));
+                    });
+                }
                 Promise.all(promises).then((values) => {
                   values.forEach((value) => {
                     sections.push(value.val());
                   });
-                
                     sections.forEach((section) => {
                         var complexSection = {
                             section: section,
@@ -97,29 +87,59 @@ export default class PostEditorScreen extends React.Component {
         </Header>
         <Content padder>
             <Form>
-                <Item stackedLabel>
+                <Item
+                    stackedLabel
+                    error={!this.state.titleText ? true : false}
+                    success={this.state.titleText ? true : false} 
+                >
                     <Label>Title</Label>
-                    <Input  onChangeText={(text) => this.setState({titleText: text})}
-                            value={this.state.titleText}/>
+                    <Input 
+                        onChangeText={(text) => this.setState({titleText: text})}
+                        value={this.state.titleText}
+                    />
                 </Item>
-                <Item stackedLabel>
+                <Item
+                    stackedLabel
+                    error={!this.state.image ? true : false}
+                    success={this.state.image ? true : false} 
+                >
                     <Label>Thumbnail Image URL</Label>
-                    <Input  onChangeText={(text) => this.setState({image: text})}
-                            value={this.state.image}/>
+                    <Input 
+                        onChangeText={(text) => this.setState({image: text})}
+                        value={this.state.image}
+                    />
                 </Item>
-                <Item stackedLabel>
+                <Item
+                    stackedLabel
+                    error={!this.state.summaryText ? true : false}
+                    success={this.state.summaryText ? true : false} 
+                >
                     <Label>Summary</Label>
-                    <Input  onChangeText={(text) => this.setState({summaryText: text})}
-                            value={this.state.summaryText}/>
+                    <Input 
+                        onChangeText={(text) => this.setState({summaryText: text})}
+                        value={this.state.summaryText}
+                    />
                 </Item>
             </Form>
-            <Button block light style={{marginBottom: 10}} onPress={() => this.savePost()}>
+            <Button 
+                block
+                light
+                style={{marginBottom: 10}}
+                onPress={() => this.savePost()}
+                disabled={!this.state.summaryText || !this.state.image || !this.state.titleText}
+            >
                 <Text>
                     Save Post
                 </Text> 
             </Button>
             {this.renderSectionsPreview()}
-            <Button block light style={{marginTop: 10}} onPress={() => this.navigateToSectionEditor()}>
+            <Button 
+                block
+                light
+                style={{marginTop: 10}}
+                onPress={() => this.navigateToSectionEditor()}
+                disabled={!this.state.summaryText || !this.state.image || !this.state.titleText}
+            >
                 <Text>
                     Add Section
                 </Text> 
@@ -133,8 +153,7 @@ export default class PostEditorScreen extends React.Component {
   }
 
   // Rendering
-  renderSectionsPreview()
-  {
+  renderSectionsPreview() {
     return this.state.complexSections.map((complexSection, index) => {
         return (
             (
@@ -145,10 +164,8 @@ export default class PostEditorScreen extends React.Component {
   }
 
   // Navigation
-  navigateToSectionEditor(complexSection)
-  {
-      if (!complexSection)
-      {
+  navigateToSectionEditor(complexSection) {
+      if (!complexSection) {
           complexSection = this.createEmptyComplexSection();
       }
 
@@ -158,45 +175,34 @@ export default class PostEditorScreen extends React.Component {
   // Callbacks invoked from other components
   editExistingSectionCallback(complexSection)
   {
-    if(!complexSection)
-    {
+    if (!complexSection) {
         console.error('Complex section null');
     }
-
-    if(!complexSection.section)
-    {
+    if (!complexSection.section) {
         console.warn( 'Section passed to edit existing section callback should not be undefined');
     }
-
-    if(!complexSection.section.content)
-    {
+    if (!complexSection.section.content) {
         console.warn( 'Content passed to edit existing section callback should not be undefined');
     }
 
     this.navigateToSectionEditor(complexSection); // this.props.navigation.navigate("SectionEditor", {saveSectionCallback: this.sectionUpdation.bind(this, complexSection), existingSection: section, existingContent: content});
   }
 
-  updateComplexSectionCallback(complexSection)
-  {
+  updateComplexSectionCallback(complexSection) {
       tempSections = this.state.complexSections;
-
-      if(complexSection.index === -1)
-      {
+      if (complexSection.index === -1) {
           complexSection.index = tempSections.length;
           tempSections.push(complexSection);
       }
-      else
-      {
+      else {
           tempSections[complexSection.index] = complexSection;
       }
-
       this.setState(previousState => {
           return { complexSections: tempSections };
       });
   }
 
-  savePost()
-  {
+  savePost() {
     this.props.navigation.state.params.complexPost.post = this.createPostJSON();
     this.props.navigation.state.params.complexPost.sections = this.createSectionsJSON();
 
@@ -204,8 +210,7 @@ export default class PostEditorScreen extends React.Component {
     this.props.navigation.goBack();
   }
 
-  createPostJSON()
-  {
+  createPostJSON() {
       return {
         postLookupId: this.state.postLookupId,
         postSummary: {
@@ -219,24 +224,21 @@ export default class PostEditorScreen extends React.Component {
       }
   }
 
-  createSectionsJSON()
-  {
+  createSectionsJSON() {
       var sections = []
-      this.state.complexSections.forEach(function(complexSection) {
-        sections.push(complexSection.section)
-      });
-
+      if (this.state.complexSections) {
+        this.state.complexSections.forEach(function(complexSection) {
+            sections.push(complexSection.section)
+          });
+      }
       return sections;
   }
 
   // Utilities
-  createEmptyComplexSection()
-  {
+  createEmptyComplexSection() {
       return {
           section: {
-              content: {
-                  
-              }                
+              content: { }                
           },
           index: -1
       }

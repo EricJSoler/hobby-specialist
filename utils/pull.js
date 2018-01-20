@@ -13,13 +13,18 @@ export function getAllPosts() {
 export function getAllSections(post) {
     var sectionVals = {};
     var promises = [];
-    post.sectionLookupIdList.forEach(function(sectionId) {
-      promises.push(getSectionById(sectionId));
-    });
-    return Promise.all(promises).then((values) => {
-      values.forEach((value) => {
-        sectionVals[value.key] = value.val();
+    if (post && post.sectionLookupIdList) {
+      post.sectionLookupIdList.forEach(function(sectionId) {
+        promises.push(getSectionById(sectionId));
       });
-      return sectionVals;
-    });
+      return Promise.all(promises).then((values) => {
+        values.forEach((value) => {
+          sectionVals[value.key] = value.val();
+        });
+        return sectionVals;
+      });
+    }
+    else {
+      return Promise.resolve({});
+    }
 }
