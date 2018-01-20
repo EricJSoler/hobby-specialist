@@ -74,7 +74,12 @@ export default class AuthoringScreen extends React.Component {
       return publishedPosts.map((publishedPost, index) => {
           return (
               (
-                <PostSummaryComplex key={index} postSummary={publishedPost.postSummary} onEditPressCallback={() => this.navigateToPostEditor(this.createComplexPostFromPost(publishedPost), true)}   onPublishPressCallback={console.log()} />
+                <PostSummaryComplex
+                  key={index} 
+                  postSummary={publishedPost.postSummary} 
+                  buttonRightText={'Edit'}
+                  buttonRightCallback={() => this.navigateToPostEditor(this.createComplexPostFromPost(publishedPost), true)}  
+                />
               )
           );
       });
@@ -85,7 +90,14 @@ export default class AuthoringScreen extends React.Component {
     return complexPosts.map((complexPost, index) => {
       return (
         (
-          <PostSummaryComplex key={index} postSummary={complexPost.post.postSummary} onEditPressCallback={() => this.navigateToPostEditor(complexPost)}   onPublishPressCallback={() => this.publishComplexPost(complexPost)}  />
+          <PostSummaryComplex 
+            key={index} 
+            postSummary={complexPost.post.postSummary} 
+            buttonLeftText={'Edit'} 
+            buttonLeftCallback={() => this.navigateToPostEditor(complexPost)} 
+            buttonRightText={'Publish'}
+            buttonRightCallback={() => this.publishComplexPost(complexPost)}  
+          />
         )
       );
     }, this);
