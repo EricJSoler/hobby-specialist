@@ -62,11 +62,9 @@ export default class AuthoringScreen extends React.Component {
     );
   }
 
-  // Rendering
   renderPublishedPostsPreview(publishedPosts)
   {
-    if(this.state.ready)
-    {
+    if (this.state.ready) {
       return publishedPosts.map((publishedPost, index) => {
           return (
               (
@@ -88,77 +86,54 @@ export default class AuthoringScreen extends React.Component {
   }
 
   // Navigation
-  navigateToPostEditor(complexPost, isPublishedPost)
-  {
+  navigateToPostEditor(complexPost, isPublishedPost) {
       var editing = true;
-      if (!complexPost)
-      {
+      if (!complexPost) {
           complexPost = this.createEmptyComplexPost();
           editing = false;
       }
-
       this.props.navigation.navigate("PostEditor", {complexPost: complexPost, updateComplexPostCallback: this.updateComplexPostCallback.bind(this), shouldInitializeFromComplexPost: editing, isPublishedPost: isPublishedPost});
   }
 
   // Callbacks invoked from other components
-  editExistingPostCallback(complexPost)
-  {
-    if(!complexPost)
-    {
+  editExistingPostCallback(complexPost) {
+    if (!complexPost) {
         console.error('Complex post null');
     }
-
-    if(!!complexPost.post)
-    {
+    if (!!complexPost.post) {
         console.warn( 'Post passed to edit existing post callback should not be undefined');
     }
-
-    if(!complexSection.post.postSummary)
-    {
+    if (!complexSection.post.postSummary) {
         console.warn( 'postSummary passed to edit existing post callback should not be undefined');
     }
-
     this.navigateToPostEditor(complexPost); 
   }
 
-  updateComplexPostCallback(complexPost)
-  {
+  updateComplexPostCallback(complexPost) {
       tempPosts = this.state.complexPosts;
-
-      if(complexPost.index === -1)
-      {
+      if (complexPost.index === -1) {
         complexPost.index = tempPosts.length;
         tempPosts.push(complexPost);
       }
-      else
-      {
+      else {
         tempPosts[complexPost.index] = complexPost;
       }
-
       this.setState(previousState => {
           return { complexPosts: tempPosts };
       });
   }
 
-  // TODO:
-  publishComplexPost(complexPost)
-  {
-
+  publishComplexPost(complexPost) {
     var post = complexPost.post;
-
-    if(!post.sectionLookupIdList)
-    {
+    if (!post.sectionLookupIdList) {
       post.sectionLookupIdList = []
     }
-
     complexPost.sections.forEach(function(section) {
-      if(section.sectionLookupId)
-      {
+      if (section.sectionLookupId) {
         // Upsert over section
         writeSection(section, section.sectionLookupId);
       }
-      else
-      {
+      else {
         // Insert new section and saveId
         var sectionId = uuid();
         var sectionWithUUID = section;
@@ -167,34 +142,26 @@ export default class AuthoringScreen extends React.Component {
         post.sectionLookupIdList.push(sectionId);
       }
     });
-
-    if(!post.postLookupId)
-    {
+    if (!post.postLookupId) {
       post.postLookupId = uuid();
     }
-
-    console.log("POST", post, "\n", "SECTIONLIST", post.sectionLookupIdList);
     writePost(post, post.postLookupId);
     this.removeFromComplexPosts(complexPost);
   }
 
-  removeFromComplexPosts(complexPost)
-  {
+  removeFromComplexPosts(complexPost) {
      var tempComplexPosts = this.state.complexPosts;
      tempComplexPosts.splice(complexPost.index, 1);
-
-     tempComplexPosts.forEach(function(val, index){
+     tempComplexPosts.forEach(function(val, index) {
        val.index = index;
      });
-
      this.setState((previousState) => {
        return {complexPosts: tempComplexPosts};
      });
   }
 
   // Utilities
-  createEmptyComplexPost()
-  {
+  createEmptyComplexPost() {
       return {
         post: {
           postSummary: {
@@ -205,12 +172,9 @@ export default class AuthoringScreen extends React.Component {
       }
   }
 
-  createComplexPostFromPost(post)
-  {
-
+  createComplexPostFromPost(post) {
     var emptyComplexPost = this.createEmptyComplexPost();
     emptyComplexPost.post = post;
-
     return emptyComplexPost;
   }
 
