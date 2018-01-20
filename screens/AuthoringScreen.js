@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, Icon, Card, CardItem} from "native-base";
 import { getAllPosts } from '../utils/pull';
 import PostSummaryComplex  from '../Components/PostSummaryComplex';
-import uuid from 'uuid/v4';
-import { writeSection, writePost, updateSection } from '../utils/write';
+import { writeSection, writePost } from '../utils/write';
+import { getSectionsRef, getPostsRef } from '../config/database/ref';
 
 export default class AuthoringScreen extends React.Component {
 
@@ -67,10 +67,8 @@ export default class AuthoringScreen extends React.Component {
     );
   }
 
-  // Rendering
   renderPublishedPostsPreview(publishedPosts)
   {
-    console.log(publishedPosts);
     if (this.state.ready)
     {
       return publishedPosts.map((publishedPost, index) => {
@@ -94,15 +92,12 @@ export default class AuthoringScreen extends React.Component {
   }
 
   // Navigation
-  navigateToPostEditor(complexPost, isPublishedPost)
-  {
+  navigateToPostEditor(complexPost, isPublishedPost) {
       var editing = true;
-      if (!complexPost)
-      {
+      if (!complexPost) {
           complexPost = this.createEmptyComplexPost();
           editing = false;
       }
-
       this.props.navigation.navigate("PostEditor", {complexPost: complexPost, updateComplexPostCallback: this.updateComplexPostCallback.bind(this), shouldInitializeFromComplexPost: editing, isPublishedPost: isPublishedPost});
   }
 
@@ -123,12 +118,10 @@ export default class AuthoringScreen extends React.Component {
     {
         console.warn( 'postSummary passed to edit existing post callback should not be undefined');
     }
-
     this.navigateToPostEditor(complexPost); 
   }
 
-  updateComplexPostCallback(complexPost)
-  {
+  updateComplexPostCallback(complexPost) {
       tempPosts = this.state.complexPosts;
 
       if (complexPost.index === -1)
@@ -136,11 +129,9 @@ export default class AuthoringScreen extends React.Component {
         complexPost.index = tempPosts.length;
         tempPosts.push(complexPost);
       }
-      else
-      {
+      else {
         tempPosts[complexPost.index] = complexPost;
       }
-
       this.setState(previousState => {
           return { complexPosts: tempPosts };
       });
@@ -154,17 +145,16 @@ export default class AuthoringScreen extends React.Component {
     {
       post.sectionLookupIdList = []
     }
-
     complexPost.sections.forEach(function(section) {
       if (section.sectionLookupId)
       {
         // Upsert over section
         writeSection(section, section.sectionLookupId);
       }
-      else
-      {
+      else {
         // Insert new section and saveId
-        var sectionId = uuid();
+        var sectionRef = getSectionsRef().push();
+        var sectionId = sectionRef.key;
         var sectionWithUUID = section;
         sectionWithUUID.sectionLookupId = sectionId;
         writeSection(sectionWithUUID, sectionId); 
@@ -182,23 +172,19 @@ export default class AuthoringScreen extends React.Component {
     this.loadPublishedPosts();
   }
 
-  removeFromComplexPosts(complexPost)
-  {
+  removeFromComplexPosts(complexPost) {
      var tempComplexPosts = this.state.complexPosts;
      tempComplexPosts.splice(complexPost.index, 1);
-
-     tempComplexPosts.forEach(function(val, index){
+     tempComplexPosts.forEach(function(val, index) {
        val.index = index;
      });
-
      this.setState((previousState) => {
        return {complexPosts: tempComplexPosts};
      });
   }
 
   // Utilities
-  createEmptyComplexPost()
-  {
+  createEmptyComplexPost() {
       return {
         post: {
           postSummary: {
@@ -209,12 +195,9 @@ export default class AuthoringScreen extends React.Component {
       }
   }
 
-  createComplexPostFromPost(post)
-  {
-
+  createComplexPostFromPost(post) {
     var emptyComplexPost = this.createEmptyComplexPost();
     emptyComplexPost.post = post;
-
     return emptyComplexPost;
   }
 

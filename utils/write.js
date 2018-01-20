@@ -1,11 +1,12 @@
 import database from '../config/database/firebase';
+import * as DatabaseConstants from '../config/constants/DatabaseConstants';
 
 function writeToDB(collection, uuid, json) {
-    return database.database().ref(collection + '/' + uuid).set(json);
+    return database.database().ref(collection + DatabaseConstants.SLASH + uuid).set(json);
 }
 
 function writeSectionToDB(section, uuid) {
-    return writeToDB('section', uuid, section);
+    return writeToDB(DatabaseConstants.SECTION, uuid, section);
 }
 
 export function writeSection(section, uuid) {
@@ -13,7 +14,7 @@ export function writeSection(section, uuid) {
 }
 
 function writePostToDB(post, uuid) {
-    return writeToDB('post', uuid, post);
+    return writeToDB(DatabaseConstants.POST, uuid, post);
 }
 
 export function writePost(post, uuid) {
