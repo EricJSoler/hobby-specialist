@@ -13,6 +13,10 @@ export function getPosts() {
     return getAllFromDB(DatabaseConstants.POST);
 }
 
+export function getPostsWithAuthor(uid) {
+    return getAllFromDB(...TODO);
+}
+
 export function getSectionById(lookupId) {
     return getFromDB(DatabaseConstants.SECTION, lookupId);
 }

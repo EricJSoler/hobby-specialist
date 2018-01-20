@@ -4,6 +4,7 @@ import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, I
 import { getAllPosts } from '../utils/pull';
 import PostSummaryComplex  from '../Components/PostSummaryComplex';
 import { writeSection, writePost } from '../utils/write';
+import { getCurrentUser } from '../utils/auth';
 import { getSectionsRef, getPostsRef } from '../config/database/ref';
 
 export default class AuthoringScreen extends React.Component {
@@ -167,7 +168,10 @@ export default class AuthoringScreen extends React.Component {
       var postRef = getPostsRef().push();
       post.postLookupId = postRef.key;
     }
-
+    var author = getCurrentUser();
+    if (author) {
+      post.authorLookupId = author.uid;
+    }
     writePost(post, post.postLookupId);
     this.removeFromComplexPosts(complexPost);
     this.loadPublishedPosts();

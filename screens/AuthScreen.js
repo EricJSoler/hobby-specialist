@@ -24,13 +24,26 @@ export default class AuthScreen extends React.Component {
           <Header />
           <Content>
             <Form>
-              <Item floatingLabel>
-                <Label>Username</Label>
-                <Input onChangeText={email => this.setState({email})} value={this.state.email}/>
+              <Item
+                floatingLabel
+                error={this.state.error ? true : false}
+              >
+                <Label>Email</Label>
+                <Input
+                    onChangeText={email => this.setState({email})}
+                    value={this.state.email}
+                />
               </Item>
-              <Item floatingLabel last>
+              <Item 
+                floatingLabel
+                last
+                error={this.state.error ? true : false}
+               >
                 <Label>Password</Label>
-                <Input onChangeText={password => this.setState({password})} value={this.state.password}/>
+                <Input
+                    onChangeText={password => this.setState({password})}
+                    value={this.state.password}
+                />
               </Item>
             </Form>
             {this.renderButtonOrLoading()}

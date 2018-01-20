@@ -4,8 +4,6 @@ import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, I
 import SectionSummaryPreviewEdit  from '../../Components/SectionSummaryPreviewEdit';
 import { getSectionById } from '../../utils/read';
 
-// TODO: add validation
-// TODO: add remove
 export default class PostEditorScreen extends React.Component {
 
     constructor(props) {
@@ -25,7 +23,6 @@ export default class PostEditorScreen extends React.Component {
           return;
         }
         else {
-            console.log('updating existing');
             this.setState(previousState => {
                 return { 
                   titleText:  this.props.navigation.state.params.complexPost.post.postSummary.title,

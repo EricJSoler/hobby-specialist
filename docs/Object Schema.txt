@@ -9,7 +9,6 @@ MainPage: {
 Post: {
 	postLookupId: uuid
 	sectionLookupIdList: List<SectionLookupId> //list of uuid strings, maintains ordering
-	authorLookupId: uuid
 	postSummary: {
 		title: string
 		content: {
@@ -17,6 +16,10 @@ Post: {
 			text:
 		}
 	}
+}
+
+Author: {
+	postLookupIds: List<PostLookupId>
 }
 
 //pull this on post load stage 2 (rendering)

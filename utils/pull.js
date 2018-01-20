@@ -1,4 +1,4 @@
-import { getPosts, getSectionById } from './read';
+import { getPosts, getSectionById, getPostsWithAuthor } from './read';
 
 export function getAllPosts() {
     var postVals = {};
@@ -8,6 +8,16 @@ export function getAllPosts() {
         });
         return postVals;
     });
+}
+
+export function getPostsAuthoredBy(uid) {
+  var postVals = {}
+  return getPostsWithAuthor(uid).then((posts) => {
+    posts.forEach((post) => {
+      postVals[post.key] = post.val();
+    });
+    return postVals;
+});
 }
 
 export function getAllSections(post) {

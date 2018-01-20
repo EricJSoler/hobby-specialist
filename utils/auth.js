@@ -11,3 +11,7 @@ export function signInWithEmailAndPassword(email, password) {
 export function createUserWithEmailAndPassword(email, password) {
     return database.auth().createUserWithEmailAndPassword(email, password)
 }
+
+export function getCurrentUser() {
+    return database.auth().currentUser;
+}
