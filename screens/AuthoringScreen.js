@@ -4,7 +4,7 @@ import { Container, Header, Footer, Content, Left, Body, Title, Right, Button, I
 import { getAllPosts } from '../utils/pull';
 import PostSummaryComplex  from '../Components/PostSummaryComplex';
 import uuid from 'uuid/v4';
-import { writeSection, writePost } from '../utils/write';
+import { writeSection, writePost, updateSection } from '../utils/write';
 
 export default class AuthoringScreen extends React.Component {
 
@@ -18,12 +18,17 @@ export default class AuthoringScreen extends React.Component {
   }
 
   componentWillMount() {
+    this.loadPublishedPosts();
+}
+
+  loadPublishedPosts()
+  {
     getAllPosts().then(function(posts) {
       this.setState(previousState => {
         return { ready: true, publishedPosts: Object.values(posts) };
       });
     }.bind(this));
-}
+  }
 
   render() {
     return (
@@ -65,7 +70,8 @@ export default class AuthoringScreen extends React.Component {
   // Rendering
   renderPublishedPostsPreview(publishedPosts)
   {
-    if(this.state.ready)
+    console.log(publishedPosts);
+    if (this.state.ready)
     {
       return publishedPosts.map((publishedPost, index) => {
           return (
@@ -103,17 +109,17 @@ export default class AuthoringScreen extends React.Component {
   // Callbacks invoked from other components
   editExistingPostCallback(complexPost)
   {
-    if(!complexPost)
+    if (!complexPost)
     {
         console.error('Complex post null');
     }
 
-    if(!!complexPost.post)
+    if (!complexPost.post)
     {
         console.warn( 'Post passed to edit existing post callback should not be undefined');
     }
 
-    if(!complexSection.post.postSummary)
+    if (!complexSection.post.postSummary)
     {
         console.warn( 'postSummary passed to edit existing post callback should not be undefined');
     }
@@ -125,7 +131,7 @@ export default class AuthoringScreen extends React.Component {
   {
       tempPosts = this.state.complexPosts;
 
-      if(complexPost.index === -1)
+      if (complexPost.index === -1)
       {
         complexPost.index = tempPosts.length;
         tempPosts.push(complexPost);
@@ -140,19 +146,17 @@ export default class AuthoringScreen extends React.Component {
       });
   }
 
-  // TODO:
   publishComplexPost(complexPost)
   {
-
     var post = complexPost.post;
 
-    if(!post.sectionLookupIdList)
+    if (!post.sectionLookupIdList)
     {
       post.sectionLookupIdList = []
     }
 
     complexPost.sections.forEach(function(section) {
-      if(section.sectionLookupId)
+      if (section.sectionLookupId)
       {
         // Upsert over section
         writeSection(section, section.sectionLookupId);
@@ -168,14 +172,14 @@ export default class AuthoringScreen extends React.Component {
       }
     });
 
-    if(!post.postLookupId)
+    if (!post.postLookupId)
     {
       post.postLookupId = uuid();
     }
 
-    console.log("POST", post, "\n", "SECTIONLIST", post.sectionLookupIdList);
     writePost(post, post.postLookupId);
     this.removeFromComplexPosts(complexPost);
+    this.loadPublishedPosts();
   }
 
   removeFromComplexPosts(complexPost)
