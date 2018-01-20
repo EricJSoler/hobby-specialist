@@ -67,28 +67,58 @@ export default class SectionEditorScreen extends React.Component {
         </Header>
         <Content>
           <Form>
-            <Item stackedLabel>
+            <Item 
+              stackedLabel
+              error={!this.state.headerText ? true : false}
+              success={this.state.headerText ? true : false} 
+            >
               <Label>Header</Label>
-              <Input  onChangeText={(text) => this.setState({headerText: text})}
-                      value={this.state.headerText}/>
+              <Input 
+                onChangeText={(text) => this.setState({headerText: text})}
+                value={this.state.headerText}
+              />
             </Item>
-            <Item stackedLabel>
+            <Item 
+              stackedLabel
+              error={!this.state.imageUrl ? true : false}
+              success={this.state.imageUrl ? true : false}  
+            >
               <Label>Image URL</Label>
-              <Input  onChangeText={(text) => this.setState({imageUrl: text})}
-                      value={this.state.imageUrl}/>
+              <Input 
+                onChangeText={(text) => this.setState({imageUrl: text})}
+                value={this.state.imageUrl}
+              />
             </Item>
-            <Item stackedLabel>
+            <Item 
+              stackedLabel
+              error={!this.state.bodyText ? true : false}
+              success={this.state.bodyText ? true : false}  
+            >
               <Label>Body</Label>
-              <Input  onChangeText={(text) => this.setState({bodyText: text})}
-                      value={this.state.bodyText}/>
+              <Input 
+                onChangeText={(text) => this.setState({bodyText: text})}
+                value={this.state.bodyText}
+              />
             </Item>
-            <Item stackedLabel>
+            <Item 
+              stackedLabel
+              error={!this.state.footerText ? true : false}
+              success={this.state.footerText ? true : false} 
+            >
               <Label>Footer</Label>
-                <Input  onChangeText={(text) => this.setState({footerText: text})}
-                        value={this.state.footerText}/>
+                <Input 
+                  onChangeText={(text) => this.setState({footerText: text})}
+                  value={this.state.footerText}
+                />
             </Item>
           </Form>
-          <Button block light style={{marginTop: 10}} onPress={() => this.saveSection()}>
+          <Button 
+            block
+            light
+            style={{marginTop: 10}} 
+            onPress={() => this.saveSection()}
+            disabled={!this.state.headerText || !this.state.footerText || !this.state.imageUrl || !this.state.bodyText}
+          >
             <Text>Save Section</Text>
           </Button>
         </Content>
@@ -104,7 +134,6 @@ export default class SectionEditorScreen extends React.Component {
   saveSection()
   {
     this.props.navigation.state.params.complexSection.section = this.createSectionJSON();
-    console.log(this.props.navigation.state.params.complexSection);
     this.props.navigation.state.params.updateComplexSectionCallback(this.props.navigation.state.params.complexSection);
     this.props.navigation.goBack();
   }
