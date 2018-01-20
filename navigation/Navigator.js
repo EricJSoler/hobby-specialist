@@ -9,9 +9,9 @@ import SectionEditorScreen from '../screens/editors/SectionEditorScreen';
 
 const RootNavigator = StackNavigator(
     {
-      Auth: {
+      /*Auth: {
         screen: AuthScreen
-      },
+      },*/
       Home: {
         screen: HomeScreen,
       },
