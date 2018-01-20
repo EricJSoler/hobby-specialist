@@ -16,7 +16,8 @@ export default class PostEditorScreen extends React.Component {
             complexSections: [],
             titleText: '',
             image: '',
-            summaryText: ''
+            summaryText: '',
+            postId: undefined
         }
 
 
@@ -50,6 +51,7 @@ export default class PostEditorScreen extends React.Component {
 
             if (this.props.navigation.state.params.isPublishedPost)
             {
+                this.state.postLookupId = this.props.navigation.state.params.complexPost.post.postLookupId;
                 var sections = [];
                 var promises = [];
             
@@ -205,6 +207,7 @@ export default class PostEditorScreen extends React.Component {
   createPostJSON()
   {
       return {
+        postLookupId: this.state.postLookupId,
         postSummary: {
             title: this.state.titleText,
             content: {
